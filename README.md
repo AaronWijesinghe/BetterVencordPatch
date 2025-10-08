@@ -11,7 +11,7 @@ On macOS, Vencord doesn't automatically patch itself when Discord updates, so th
 
 ## Requirements
 All original requirements for building the official installer apply here.</br>
-Go 1.25.1 is also recommended, but you can probably use a lower version instead.</br>
+Go 1.25.x is also recommended, but you can probably use a lower version instead.</br>
 **NOTE: The only entirely supported OS for this project is macOS. Using any other OS is at your own risk.**
 
 ## Installation
