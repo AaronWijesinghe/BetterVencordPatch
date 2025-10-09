@@ -1,4 +1,4 @@
-# Vencord Auto Patcher (macOS)
+# VencordAutoPatch (macOS)
 An efficient program which patches Vencord whenever Discord updates on macOS.</br>
 On macOS, Vencord doesn't automatically patch itself when Discord updates, so this is a fix for that.
 
@@ -12,10 +12,10 @@ On macOS, Vencord doesn't automatically patch itself when Discord updates, so th
 ## Requirements
 All original requirements for building the official installer apply here.</br>
 Go 1.25.x is also recommended, but you can probably use a lower version instead.</br>
-**NOTE: The only entirely supported OS for this project is macOS. Using any other OS is at your own risk.**
+**NOTE: The only entirely supported OS for this project is macOS.**
 
 ## Installation
-Run install.sh through ZSH to install Vencord Auto Patcher.
+Run install.py to install VencordAutoPatch.</br>
 I may release a pre-built app with the launchd plist through GitHub Releases soon™.
 
 ## Credits
