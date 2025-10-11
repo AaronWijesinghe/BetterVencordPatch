@@ -8,10 +8,11 @@ package main
 
 import (
 	"errors"
-	"github.com/ProtonMail/go-appdir"
 	"os"
 	"os/exec"
 	path "path/filepath"
+
+	"github.com/ProtonMail/go-appdir"
 )
 
 var BaseDir string
@@ -130,7 +131,7 @@ func (di *DiscordInstall) patch() error {
 
 	Log.Info("Successfully patched", di.path)
 	di.isPatched = true
-	
+
 	return nil
 }
 

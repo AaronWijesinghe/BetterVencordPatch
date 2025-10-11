@@ -30,7 +30,7 @@ func FindAsarFile(dir string) (*os.File, error) {
 		}
 		_ = f.Close()
 	}
-	return nil, errors.New("Install at " + dir + " has no asar file")
+	return nil, errors.New("The install at " + dir + " has no asar file")
 }
 
 func (di *DiscordInstall) IsOpenAsar() (retBool bool) {
@@ -122,5 +122,5 @@ func (di *DiscordInstall) UninstallOpenAsar() error {
 		return nil
 	}
 
-	return errors.New("No app.asar.backup. Reinstall Discord")
+	return errors.New("No app.asar.backup. Reinstall Discord.")
 }
