@@ -5,23 +5,34 @@ def clear():
     for i in range(2):
         os.system("clear")
 
+def run_sh(sh):
+    for cmd in sh.split("\n"):
+        os.system(f"{cmd}")
+
 clear()
 print("[AutoVencordPatch Installer]")
 branch = input("Enter the branch of Discord to be automatically patched (stable, ptb, canary): ")
+openasar = input("Automatically patch OpenAsar (y/n)? ").lower().strip() == "y"
 if branch not in ["stable", "ptb", "canary"]:
     input("This version of Discord doesn't exist. ")
     exit()
 
+discords = {
+    "stable": "Discord.app",
+    "ptb": "Discord PTB.app",
+    "canary": "Discord Canary.app"
+}
 clear()
 print("[Installing AutoVencordPatch]")
 print("Preparing install environment...", end=" ", flush=True)
-os.system(f"cp ./branches/{branch}/cli.go ./installer/cli.go")
-os.system(f"cp ./branches/{branch}/autovencordpatch.go ./autovencordpatch/autovencordpatch.go")
+avp_code = open("./files/autovencordpatch.go", "r").read()
+avp_code = avp_code.replace("Discord.app", discords[branch])
+open("./autovencordpatch/autovencordpatch.go", "w").write(avp_code)
+cli_code = open("./files/cli.go", "r").read()
+cli_code = cli_code.replace("var pyOpenAsar = false", f"var pyOpenAsar = {str(openasar).lower()}")
+cli_code = cli_code.replace("var pyBranch = \"stable\"", f"var pyBranch = \"{branch}\"")
+open("./installer/cli.go", "w").write(cli_code)
 print("done")
-
-def run_sh(sh):
-    for cmd in sh.split("\n"):
-        os.system(f"{cmd}")
 
 os.chdir("./installer/")
 build_vi = """
