@@ -73,8 +73,8 @@ print("Building VencordInstaller.app...", end=" ", flush=True)
 run_sh(build_vi)
 print("done")
 
-print("Building auto-patch binary...", end=" ", flush=True)
 if use_autopatch:
+    print("Building auto-patch binary...", end=" ", flush=True)
     os.chdir("../autopatch/")
     build_avp = """
     go mod tidy
@@ -84,8 +84,6 @@ if use_autopatch:
     """
     run_sh(build_avp)
     print("done")
-else:
-    print("skipped")
 
 os.chdir("../")
 mv_to_applications = """
@@ -94,8 +92,8 @@ mv VencordInstaller.app /Applications/VencordInstaller.app
 """
 run_sh(mv_to_applications)
 
-print("Running auto-patch install scripts...", end=" ", flush=True)
 if use_autopatch:
+    print("Running auto-patch install scripts...", end=" ", flush=True)
     install = """
     cp autopatch/org.aaron.autovencordpatch.plist ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist
     launchctl unload ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist > /dev/null 2>&1
@@ -104,8 +102,6 @@ if use_autopatch:
     """
     run_sh(install)
     print("done")
-else:
-    print("skipped")
 
 print("Cleaning up...", end=" ", flush=True)
 os.remove("./installer/cli.go")
