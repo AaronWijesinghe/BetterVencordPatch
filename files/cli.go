@@ -33,15 +33,16 @@ func die(msg string) {
 	exitFailure(msg)
 }
 
+var pyBranch = "stable"
+var pyOpenAsar = false
+var pySendSuccessNotifications = true
+
 func main() {
 	InitGithubDownloader()
 	discords = FindDiscords()
 
 	// Used by log.go init func
 	flag.Bool("debug", false, "Enable debug info")
-
-	var pyOpenAsar = false
-	var pyBranch = "stable"
 
 	var versionFlag = flag.Bool("version", false, "View the program version")
 	var installFlag = flag.Bool("install", !pyOpenAsar, "Install Vencord")
@@ -118,12 +119,14 @@ func main() {
 }
 
 func exitSuccess() {
-	color.HiGreen("✔ Success!")
-	cmd := exec.Command("osascript", "-e", `display notification "Successfully patched Vencord!" with title "VencordInstaller"`)
-	err := cmd.Run()
-	if err != nil {
-		panic(err)
+	if pySendSuccessNotifications == true {
+		cmd := exec.Command("osascript", "-e", `display notification "Successfully patched Vencord!" with title "VencordInstaller"`)
+		err := cmd.Run()
+		if err != nil {
+			panic(err)
+		}
 	}
+	color.HiGreen("✔ Success!")
 	os.Exit(0)
 }
 

@@ -12,26 +12,28 @@ def run_sh(sh):
 
 clear()
 print("[BetterVencordPatch Installer (macOS)]")
-branch = input("Enter the branch of Discord to be patched (stable, ptb, canary): ")
+branch = input("Enter the branch of Discord to be patched by Vencord (stable, ptb, canary): ")
 if branch not in ["stable", "ptb", "canary"]:
     input("This branch of Discord doesn't exist. ")
     exit()
 openasar = input("Patch this branch of Discord with OpenAsar (y/n)? ").lower().strip() == "y"
-use_avp = input("Do you want to automatically patch Discord through updates (y/n)? ").lower().strip() == "y"
+use_autopatch = input("Patch this branch of Discord through updates (y/n)? ").lower().strip() == "y"
+send_success_notifications = input("Send notifications on success (y/n)? ").lower().strip() == "y"
 
 clear()
 print("[Installing BetterVencordPatch]")
-print("Running pre-install checks...", end=" ", flush=True)
+print(f"Installing with preferences: branch='{branch}', openasar={openasar}, use_autopatch={use_autopatch}, send_success_notifications={send_success_notifications}")
+print("\nRunning pre-install checks...", end=" ", flush=True)
 if platform.system() != "Darwin":
     print("failed")
     input("This operating system is not supported by BetterVencordPatch. ")
     exit()
-for dir in ["./files/", "./autopatch/", "./installer/"]:
+for dir in ["./files/", "./autopatch/" if use_autopatch else "./files/", "./installer/"]:
     if not os.path.exists(dir):
         print("failed")
         input(f"The directory '{dir}' is missing. ")
         exit()
-for file in ["./files/autovencordpatch.go", "./files/cli.go"]:
+for file in ["./files/autovencordpatch.go" if use_autopatch else "./files/cli.go", "./files/cli.go"]:
     if not os.path.exists(file):
         print("failed")
         input(f"The file '{file}' is missing. ")
@@ -44,12 +46,14 @@ discords = {
     "canary": "Discord Canary.app"
 }
 print("Preparing install environment...", end=" ", flush=True)
-avp_code = open("./files/autovencordpatch.go", "r").read()
-avp_code = avp_code.replace("Discord.app", discords[branch])
-open("./autopatch/autovencordpatch.go", "w").write(avp_code)
+if use_autopatch:
+    avp_code = open("./files/autovencordpatch.go", "r").read()
+    avp_code = avp_code.replace("Discord.app", discords[branch])
+    open("./autopatch/autovencordpatch.go", "w").write(avp_code)
 cli_code = open("./files/cli.go", "r").read()
 cli_code = cli_code.replace("var pyOpenAsar = false", f"var pyOpenAsar = {str(openasar).lower()}")
 cli_code = cli_code.replace("var pyBranch = \"stable\"", f"var pyBranch = \"{branch}\"")
+cli_code = cli_code.replace("var pySendSuccessNotifications = true", f"var pySendSuccessNotifications = {str(send_success_notifications).lower()}")
 open("./installer/cli.go", "w").write(cli_code)
 print("done")
 
@@ -69,15 +73,15 @@ print("Building VencordInstaller.app...", end=" ", flush=True)
 run_sh(build_vi)
 print("done")
 
-os.chdir("../autopatch/")
-build_avp = """
-go get github.com/fsnotify/fsnotify
-CGO_ENABLED=0 go build -o autovencordpatch autovencordpatch.go
-chmod +x autovencordpatch
-mv autovencordpatch ../VencordInstaller.app/Contents/Resources/autovencordpatch
-"""
 print("Building auto-patch binary...", end=" ", flush=True)
-if use_avp:
+if use_autopatch:
+    os.chdir("../autopatch/")
+    build_avp = """
+    go mod tidy
+    CGO_ENABLED=0 go build -o autovencordpatch autovencordpatch.go
+    chmod +x autovencordpatch
+    mv autovencordpatch ../VencordInstaller.app/Contents/Resources/autovencordpatch
+    """
     run_sh(build_avp)
     print("done")
 else:
@@ -88,15 +92,16 @@ mv_to_applications = """
 rm -rf /Applications/VencordInstaller.app
 mv VencordInstaller.app /Applications/VencordInstaller.app
 """
-install = """
-cp autopatch/org.aaron.autovencordpatch.plist ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist
-launchctl unload ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist > /dev/null 2>&1
-launchctl load ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist > /dev/null 2>&1
-open /Applications/VencordInstaller.app
-"""
-print("Running auto-patch install scripts...", end=" ", flush=True)
 run_sh(mv_to_applications)
-if use_avp:
+
+print("Running auto-patch install scripts...", end=" ", flush=True)
+if use_autopatch:
+    install = """
+    cp autopatch/org.aaron.autovencordpatch.plist ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist
+    launchctl unload ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist > /dev/null 2>&1
+    launchctl load ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist > /dev/null 2>&1
+    open /Applications/VencordInstaller.app
+    """
     run_sh(install)
     print("done")
 else:
@@ -104,7 +109,8 @@ else:
 
 print("Cleaning up...", end=" ", flush=True)
 os.remove("./installer/cli.go")
-os.remove("./autopatch/autovencordpatch.go")
+if use_autopatch:
+    os.remove("./autopatch/autovencordpatch.go")
 print("done")
 
 input("\nSuccessfully installed BetterVencordPatch! ")
