@@ -9,13 +9,10 @@ Vencord doesn't automatically patch itself when Discord updates, so BetterVencor
 - Patch Vencord (and optionally OpenAsar) automatically, even through Discord updates
 - Notifications are used to communicate success, failure, and errors
 
-## Requirements
-All original requirements for building the official installer apply here.</br>
-Go 1.25.x is also recommended, but you can probably use a lower version instead.</br>
-
 ## Installation
+All original requirements for building the official installer apply here.</br>
 Run install_[YOUR OPERATING SYSTEM].py to install BetterVencordPatch.</br>
-I am currently working on a release for non-source-builders soon™.
+To build from source, install Python 3.x and Go 1.25.x. The dependencies will be automatically installed.
 
 ## Credits
 Auto-patcher created by [Aaron Wijesinghe](https://github.com/introvertednoob)
