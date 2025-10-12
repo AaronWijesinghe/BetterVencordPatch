@@ -12,7 +12,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"os/exec"
+	"runtime"
 
 	"github.com/fatih/color"
 )
@@ -120,10 +120,10 @@ func main() {
 
 func exitSuccess() {
 	if pySendSuccessNotifications == true {
-		cmd := exec.Command("osascript", "-e", `display notification "Successfully patched Vencord!" with title "VencordInstaller"`)
-		err := cmd.Run()
-		if err != nil {
-			panic(err)
+		if runtime.GOOS == "darwin" {
+			notify("BetterVencordPatch", "Successfully installed Vencord!")
+		} else {
+			notify("Success", "Successfully installed Vencord!")
 		}
 	}
 	color.HiGreen("Success!")
@@ -136,10 +136,12 @@ func exitFailure(reason ...string) {
 		displayed_reason = "Failed to patch Vencord: " + reason[0]
 	}
 	color.HiRed("Failed!")
-	cmd := exec.Command("osascript", "-e", `display notification "`+displayed_reason+`" with title "VencordInstaller"`)
-	err := cmd.Run()
-	if err != nil {
-		panic(err)
+	//cmd := exec.Command("osascript", "-e", display notification "++" with title "VencordInstaller")
+
+	if runtime.GOOS == "darwin" {
+		notify("BetterVencordPatch", displayed_reason)
+	} else {
+		notify("An error has occured.", displayed_reason)
 	}
 	os.Exit(1)
 }

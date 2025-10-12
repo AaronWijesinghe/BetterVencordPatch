@@ -70,7 +70,7 @@ if use_autopatch:
     os.chdir("../autopatch/")
     os.system("go mod tidy")
     os.system("go build -ldflags=\"-H=windowsgui\" -o autovencordpatch.exe")
-    os.system("taskkill /f /im autovencordpatch.exe")
+    os.system("taskkill /f /im autovencordpatch.exe >NUL 2>&1")
     if os.path.exists(f"C:/Users/{getpass.getuser()}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autovencordpatch.exe"):
         os.remove(f"C:/Users/{getpass.getuser()}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autovencordpatch.exe")
     os.rename("autovencordpatch.exe", f"C:/Users/{getpass.getuser()}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autovencordpatch.exe")

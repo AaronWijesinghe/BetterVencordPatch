@@ -22,7 +22,7 @@ func runInstaller() {
 		HideWindow:    true,
 		CreationFlags: windows.CREATE_NO_WINDOW,
 	}
-	err := cmd.Start()
+	err := cmd.Run()
 	if err != nil {
 		fmt.Println("["+time.Now().Format("2006-01-02 15:04:05")+"] Failed to run installer:", err)
 	}
@@ -78,7 +78,6 @@ func main() {
 				fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Discord has finished updating, re-opening Discord...")
 				killDiscord()
 				runInstaller()
-				time.Sleep(1 * time.Second)
 				startDiscord()
 				rms = 0
 			} else if filepath.Clean(event.Name) == discordJSON && event.Op&fsnotify.Remove == fsnotify.Remove {
