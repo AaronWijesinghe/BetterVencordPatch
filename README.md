@@ -14,7 +14,7 @@ Download and run INSTALLER.exe or INSTALLER from the latest release, depending o
 All the required files will be downloaded for you.
 
 ## Building from Source
-**You have much more control over your installation when building from source, including the Discord branch which is patched and whether or not to send notifications on success.**
+**You have much more control over your installation when building from source, including the Discord branch which is patched and whether or not to send notifications on success.**</br>
 All original requirements for building the official installer apply here.</br>
 Run install_[YOUR OPERATING SYSTEM].py to install BetterVencordPatch from source.</br>
 To build from source, install Python 3.x and Go 1.25.x. The dependencies will be automatically installed.
