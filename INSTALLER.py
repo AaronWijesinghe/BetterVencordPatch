@@ -5,6 +5,7 @@ import zipfile
 import getpass
 import platform
 import requests
+from sys import exit
 
 os.chdir(os.path.dirname(__file__))
 def clear():

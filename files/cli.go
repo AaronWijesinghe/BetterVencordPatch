@@ -55,7 +55,8 @@ func main() {
 	flag.Parse()
 
 	if *versionFlag {
-		fmt.Println("Vencord Installer CLI v1.4.0 (modified)")
+		fmt.Println("BetterVencordPatch v0.1.0")
+		fmt.Println("Using the Vencord Installer CLI (v1.4.0, modified)")
 		fmt.Println("Modified by @introvertednoob to install Vencord without user interaction")
 		fmt.Println("\nCopyright (C) 2023 Vendicated and Vencord contributors")
 		fmt.Println("License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.")

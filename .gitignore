@@ -1,5 +1,5 @@
 vencordinstaller
-binaries
+*binaries
 *cached.txt
 *.exe
 *.syso
