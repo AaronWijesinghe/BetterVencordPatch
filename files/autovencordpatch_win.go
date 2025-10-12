@@ -36,7 +36,7 @@ func killDiscord() {
 	}
 	err := cmd.Start()
 	if err != nil {
-		fmt.Println("["+time.Now().Format("2006-01-02 15:04:05")+"] Failed to run installer:", err)
+		fmt.Println("["+time.Now().Format("2006-01-02 15:04:05")+"] Failed to kill Discord:", err)
 	}
 }
 
@@ -48,7 +48,7 @@ func startDiscord() {
 	}
 	err := cmd.Start()
 	if err != nil {
-		fmt.Println("["+time.Now().Format("2006-01-02 15:04:05")+"] Failed to run installer:", err)
+		fmt.Println("["+time.Now().Format("2006-01-02 15:04:05")+"] Failed to start Discord:", err)
 	}
 }
 
