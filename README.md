@@ -1,6 +1,6 @@
-# BetterVencordPatch (macOS)
-An efficient program which lets you install Vencord without user interaction and (optionally) patches Vencord whenever Discord updates on macOS.</br>
-On macOS, Vencord doesn't automatically patch itself when Discord updates, so BetterVencordPatch offers a fix for that.
+# BetterVencordPatch
+An efficient program which lets you install Vencord without user interaction and (optionally) patches Vencord whenever Discord updates.</br>
+Vencord doesn't automatically patch itself when Discord updates, so BetterVencordPatch offers a fix for that.
 
 ## Features
 - VencordInstaller.app can patch Vencord without any user interaction, unlike the official installer
@@ -12,11 +12,10 @@ On macOS, Vencord doesn't automatically patch itself when Discord updates, so Be
 ## Requirements
 All original requirements for building the official installer apply here.</br>
 Go 1.25.x is also recommended, but you can probably use a lower version instead.</br>
-**NOTE: The only supported OS for this project is macOS (for now).**
 
 ## Installation
-Run install.py to install BetterVencordPatch.</br>
-~~I may release a pre-built app with the launchd plist through GitHub Releases soon™.~~
+Run install_[YOUR OPERATING SYSTEM].py to install BetterVencordPatch.</br>
+I am currently working on a release for non-source-builders soon™.
 
 ## Credits
 Auto-patcher created by [Aaron Wijesinghe](https://github.com/introvertednoob)
