@@ -21,7 +21,7 @@ Run install_[YOUR OPERATING SYSTEM].py to install BetterVencordPatch from source
 To build from source, install Python 3.x and Go 1.25.x. The dependencies will be automatically installed.
 
 ## Credits
-Auto-patcher created by [Aaron Wijesinghe](https://github.com/introvertednoob)
+Auto-patcher created by [Aaron Wijesinghe](https://github.com/AaronWijesinghe)
 
 This software uses a modified version of the [Vencord Installer](https://github.com/Vencord/Installer)</br>
 Copyright (c) 2023 Vendicated and Vencord contributors</br>
