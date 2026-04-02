@@ -113,7 +113,7 @@ func main() {
 		exitFailure(err.Error())
 	}
 	if errSilent != nil {
-		exitFailure()
+		exitFailure(errSilent.Error())
 	}
 
 	exitSuccess()

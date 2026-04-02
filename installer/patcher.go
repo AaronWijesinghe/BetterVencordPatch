@@ -112,9 +112,7 @@ func (di *DiscordInstall) patch() error {
 		Log.Info(di.path, "is already patched. Unpatching first...")
 		if err := di.unpatch(); err != nil {
 			if errors.Is(err, os.ErrPermission) {
-				notify("BetterVencordPatch", "The App Management/Full Disk Access permission must be granted to allow VencordInstaller to patch Vencord. Make sure Discord isn't running!")
-				os.Exit(1)
-				return err
+				return errors.New("The App Management/Full Disk Access permission must be granted to allow VencordInstaller to patch Vencord. Make sure Discord isn't running!")
 			}
 			return errors.New("patch: Failed to unpatch already patched install '" + di.path + "':\n" + err.Error())
 		}
@@ -122,11 +120,10 @@ func (di *DiscordInstall) patch() error {
 
 	if err := patchAppAsar(path.Join(di.appPath, ".."), di.isSystemElectron); err != nil {
 		if errors.Is(err, os.ErrPermission) {
-			notify("BetterVencordPatch", "The App Management/Full Disk Access permission must be granted to allow VencordInstaller to patch Vencord. Make sure Discord isn't running!")
-			os.Exit(1)
+			return errors.New("The App Management/Full Disk Access permission must be granted to allow VencordInstaller to patch Vencord. Make sure Discord isn't running!")
+		} else {
 			return err
 		}
-		return err
 	}
 
 	Log.Info("Successfully patched", di.path)
