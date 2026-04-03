@@ -18,6 +18,8 @@ const (
 	checkInterval = 1 * time.Second
 )
 
+var discordBranchSuffix = ""
+
 func runInstaller() {
 	cmd := exec.Command(filepath.Join(os.Getenv("LOCALAPPDATA"), "bettervencordpatch/vencordinstaller.exe"))
 	cmd.SysProcAttr = &syscall.SysProcAttr{
@@ -43,7 +45,7 @@ func killDiscord() {
 }
 
 func startDiscord() {
-	cmd := exec.Command(filepath.Join(os.Getenv("LOCALAPPDATA"), "Discord/Update.exe"), "--processStart", "Discord.exe")
+	cmd := exec.Command(filepath.Join(os.Getenv("LOCALAPPDATA"), "Discord"+discordBranchSuffix+"/Update.exe"), "--processStart", "Discord.exe")
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		HideWindow:    true,
 		CreationFlags: windows.CREATE_NO_WINDOW,
@@ -55,7 +57,9 @@ func startDiscord() {
 }
 
 func main() {
-	discordJSON := filepath.Join(os.Getenv("LOCALAPPDATA"), "Discord/packages/RELEASES")
+	//var lastUpdate time.Time
+	discordJSON := filepath.Clean(filepath.Join(os.Getenv("LOCALAPPDATA"), "Discord"+discordBranchSuffix+"/app.ico"))
+	fmt.Println(discordJSON)
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		fmt.Println("["+time.Now().Format("2006-01-02 15:04:05")+"] Failed to create watcher:", err)
@@ -75,11 +79,15 @@ func main() {
 	for {
 		select {
 		case event := <-watcher.Events:
-			if filepath.Clean(event.Name) == discordJSON && event.Op&fsnotify.Write == fsnotify.Write {
-				fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Discord has finished updating, re-opening Discord...")
-				killDiscord()
-				runInstaller()
-				startDiscord()
+			if filepath.Clean(event.Name) == discordJSON {
+				if event.Op&fsnotify.Create == fsnotify.Create || event.Op&fsnotify.Write == fsnotify.Write || event.Op&fsnotify.Remove == fsnotify.Remove {
+					fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Icon update detected, patching Vencord in 5s...")
+					time.Sleep(time.Second * 5)
+					fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Discord has (likely) finished updating, re-opening Discord...")
+					killDiscord()
+					runInstaller()
+					startDiscord()
+				}
 			}
 		case err := <-watcher.Errors:
 			fmt.Println("Watcher error:", err)
