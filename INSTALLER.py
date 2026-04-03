@@ -15,8 +15,8 @@ clear()
 print("[BetterVencordPatch Installer]")
 print("This installer will download the latest files from GitHub.")
 print("")
-autopatch = input("Automatically patch Discord with Vencord through updates (y/n)? ").lower().strip() == "y"
-openasar = input("Patch OpenAsar (y/n)? ").lower().strip() == "y"
+autopatch = input("Automatically patch Discord with Vencord through updates (y/N)? ").lower().strip() == "y"
+openasar = input("Patch OpenAsar (y/N)? ").lower().strip() == "y"
 
 releases = requests.get("https://api.github.com/repos/introvertednoob/bettervencordpatch/releases")
 if not releases.ok:

@@ -12,9 +12,9 @@ branch = input("Enter the branch of Discord to be patched by Vencord (stable, pt
 if branch not in ["stable", "ptb", "canary"]:
     input("This branch of Discord doesn't exist. ")
     exit()
-openasar = input("Patch this branch of Discord with OpenAsar (y/n)? ").lower().strip() == "y"
-use_autopatch = input("Patch this branch of Discord through updates (y/n)? ").lower().strip() == "y"
-send_success_notifications = input("Send notifications on success (y/n)? ").lower().strip() == "y"
+openasar = input("Patch this branch of Discord with OpenAsar (y/N)? ").lower().strip() == "y"
+use_autopatch = input("Patch this branch of Discord through updates (y/N)? ").lower().strip() == "y"
+send_success_notifications = input("Send notifications on success (y/N)? ").lower().strip() == "y"
 
 clear()
 print("[Installing BetterVencordPatch]")
