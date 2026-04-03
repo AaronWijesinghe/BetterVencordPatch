@@ -5,6 +5,7 @@ go 1.25.2
 require (
 	github.com/ProtonMail/go-appdir v1.1.0
 	github.com/fatih/color v1.18.0
+	github.com/fsnotify/fsnotify v1.9.0
 	github.com/go-toast/toast v0.0.0-20190211030409-01e6764cf0a4
 	golang.org/x/sys v0.37.0
 )

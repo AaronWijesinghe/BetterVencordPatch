@@ -20,6 +20,7 @@ clear()
 print("[Installing BetterVencordPatch]")
 print(f"Installing with preferences: branch='{branch}', openasar={openasar}, use_autopatch={use_autopatch}, send_success_notifications={send_success_notifications}")
 print("\nRunning pre-install checks...", end=" ", flush=True)
+os.makedirs(f"C:/Users/{getpass.getuser()}/AppData/Local/bettervencordpatch/", exist_ok=True)
 if platform.system() != "Windows":
     print("failed")
     input("This operating system is not supported by this installer. ")

@@ -1,3 +1,5 @@
+//go:build avp_win
+
 package main
 
 import (
@@ -53,7 +55,7 @@ func startDiscord() {
 }
 
 func main() {
-	discordJSON := filepath.Join(os.Getenv("LOCALAPPDATA"), "Discord/rm-1")
+	discordJSON := filepath.Join(os.Getenv("LOCALAPPDATA"), "Discord/packages/RELEASES")
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		fmt.Println("["+time.Now().Format("2006-01-02 15:04:05")+"] Failed to create watcher:", err)
@@ -70,18 +72,14 @@ func main() {
 
 	fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Watching for Discord updates...")
 
-	rms := 0
 	for {
 		select {
 		case event := <-watcher.Events:
-			if filepath.Clean(event.Name) == discordJSON && event.Op&fsnotify.Remove == fsnotify.Remove && rms == 1 {
+			if filepath.Clean(event.Name) == discordJSON && event.Op&fsnotify.Write == fsnotify.Write {
 				fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Discord has finished updating, re-opening Discord...")
 				killDiscord()
 				runInstaller()
 				startDiscord()
-				rms = 0
-			} else if filepath.Clean(event.Name) == discordJSON && event.Op&fsnotify.Remove == fsnotify.Remove {
-				rms = 1
 			}
 		case err := <-watcher.Errors:
 			fmt.Println("Watcher error:", err)

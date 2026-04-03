@@ -1,3 +1,5 @@
+//go:build avp_macos
+
 package main
 
 import (
