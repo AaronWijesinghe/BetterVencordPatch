@@ -52,9 +52,9 @@ print("done")
 if use_autopatch:
     print("Building auto-patch binary...", end=" ", flush=True)
     os.system("go mod tidy")
-    #os.system(f"go build -ldflags=\"-H=windowsgui -X vencordinstaller.discordBranchSuffix='{branch_suffixes[branch]}'\" --tags avp_win -o autovencordpatch.exe")
+    os.system(f"go build -ldflags=\"-H=windowsgui -X vencordinstaller.discordBranchSuffix='{branch_suffixes[branch]}'\" --tags avp_win -o autovencordpatch.exe")
     # debug
-    os.system(f"go build -ldflags=\"-X vencordinstaller.discordBranchSuffix='{branch_suffixes[branch]}'\" --tags avp_win -o autovencordpatch.exe")
+    # os.system(f"go build -ldflags=\"-X vencordinstaller.discordBranchSuffix='{branch_suffixes[branch]}'\" --tags avp_win -o autovencordpatch.exe")
     os.system("taskkill /f /im autovencordpatch.exe >NUL 2>&1")
     if os.path.exists(f"C:/Users/{getpass.getuser()}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autovencordpatch.exe"):
         os.remove(f"C:/Users/{getpass.getuser()}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autovencordpatch.exe")
