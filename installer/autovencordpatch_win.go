@@ -59,8 +59,8 @@ func startDiscord() {
 func main() {
 	var lastUpdate time.Time
 
-	discordJSON := filepath.Clean(filepath.Join(os.Getenv("LOCALAPPDATA"), "Discord"+discordBranchSuffix+"/app.ico"))
-	fmt.Println(discordJSON)
+	discordICON := filepath.Clean(filepath.Join(os.Getenv("LOCALAPPDATA"), "Discord"+discordBranchSuffix+"/app.ico"))
+	fmt.Println(discordICON)
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		fmt.Println("["+time.Now().Format("2006-01-02 15:04:05")+"] Failed to create watcher:", err)
@@ -68,7 +68,7 @@ func main() {
 	}
 	defer watcher.Close()
 
-	dir := filepath.Dir(discordJSON)
+	dir := filepath.Dir(discordICON)
 	err = watcher.Add(dir)
 	if err != nil {
 		fmt.Println("["+time.Now().Format("2006-01-02 15:04:05")+"] Failed to add watcher:", err)
@@ -80,7 +80,7 @@ func main() {
 	for {
 		select {
 		case event := <-watcher.Events:
-			if filepath.Clean(event.Name) == discordJSON {
+			if filepath.Clean(event.Name) == discordICON {
 				if event.Op&fsnotify.Create == fsnotify.Create || event.Op&fsnotify.Write == fsnotify.Write || event.Op&fsnotify.Remove == fsnotify.Remove {
 					if time.Since(lastUpdate) > 30*time.Second {
 						lastUpdate = time.Now()
