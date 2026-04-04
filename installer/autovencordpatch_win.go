@@ -57,7 +57,8 @@ func startDiscord() {
 }
 
 func main() {
-	//var lastUpdate time.Time
+	var lastUpdate time.Time
+
 	discordJSON := filepath.Clean(filepath.Join(os.Getenv("LOCALAPPDATA"), "Discord"+discordBranchSuffix+"/app.ico"))
 	fmt.Println(discordJSON)
 	watcher, err := fsnotify.NewWatcher()
@@ -81,12 +82,16 @@ func main() {
 		case event := <-watcher.Events:
 			if filepath.Clean(event.Name) == discordJSON {
 				if event.Op&fsnotify.Create == fsnotify.Create || event.Op&fsnotify.Write == fsnotify.Write || event.Op&fsnotify.Remove == fsnotify.Remove {
-					fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Icon update detected, patching Vencord in 5s...")
-					time.Sleep(time.Second * 5)
-					fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Discord has (likely) finished updating, re-opening Discord...")
-					killDiscord()
-					runInstaller()
-					startDiscord()
+					if time.Since(lastUpdate) > 30*time.Second {
+						lastUpdate = time.Now()
+						fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Icon update detected, patching Vencord in 10s...")
+						time.Sleep(time.Second * 10)
+						fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Discord has (likely) finished updating, re-opening Discord...")
+						killDiscord()
+						time.Sleep(time.Second * 2)
+						runInstaller()
+						startDiscord()
+					}
 				}
 			}
 		case err := <-watcher.Errors:
