@@ -18,16 +18,9 @@ def build(openasar, op):
     branch = "stable"
     send_success_notifications = True
 
-    cli_code = open("./files/cli.go", "r").read()
-    cli_code = cli_code.replace("var pyOpenAsar = false", f"var pyOpenAsar = {str(openasar).lower()}")
-    cli_code = cli_code.replace("var pyBranch = \"stable\"", f"var pyBranch = \"{branch}\"")
-    cli_code = cli_code.replace("var pySendSuccessNotifications = true", f"var pySendSuccessNotifications = {str(send_success_notifications).lower()}")
-    open("./installer/cli.go", "w").write(cli_code)
-
-    os.chdir("./installer/")
     build_vi = f"""
     go mod tidy
-    CGO_ENABLED=0{" GOOS=windows GOARCH=amd64 " if op == "Windows" else " "}go build{" -ldflags=\"-H=windowsgui\" " if op == "Windows" else " "}--tags cli
+    CGO_ENABLED=0{" GOOS=windows GOARCH=amd64 " if op == "Windows" else " "}go build -ldflags=\"{"-H=windowsgui " if op == "Windows" else ""}-X vencordinstaller.pyBranch='{branch}' -X vencordinstaller.pyOpenAsar='{openasar}' -X vencordinstaller.pySendSuccessNotifications='{send_success_notifications}'\" --tags cli
     """
     build_vi_darwin = """
     mkdir -p VencordInstaller.app/Contents/MacOS
@@ -40,33 +33,24 @@ def build(openasar, op):
     run_sh(build_vi)
     if op == "Darwin":
         run_sh(build_vi_darwin)
-    os.system(f"mv VencordInstaller{suffix} ../VencordInstaller{suffix}")
-
-    os.chdir("../")
-    os.remove("./installer/cli.go")
-    os.system(f"mv VencordInstaller{suffix} ./binaries/VencordInstaller-{"no_" if not openasar else ""}openasar{suffix}")
+    os.system(f"mv VencordInstaller{suffix} ../binaries/VencordInstaller-{"no_" if not openasar else ""}openasar{suffix}")
 
 clear()
 if os.path.exists("./binaries/"):
     shutil.rmtree("./binaries")
 os.mkdir("./binaries/")
 
-os.system("cp ./files/autovencordpatch.go ./autopatch/autovencordpatch.go")
-os.system("cp ./files/autovencordpatch_win.go ./autopatch/autovencordpatch_win.go")
-os.chdir("./autopatch")
+os.chdir("./installer/")
 build_avp = f"""
 go mod tidy
-CGO_ENABLED=0 go build -o autovencordpatch autovencordpatch.go
-CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags=\"-H=windowsgui\" -o autovencordpatch.exe autovencordpatch_win.go
+CGO_ENABLED=0 go build -o autovencordpatch --tags avp_macos
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags=\"-H=windowsgui\" -o autovencordpatch.exe --tags avp_win
 """
 run_sh(build_avp)
-os.chdir("../")
-os.rename("./autopatch/autovencordpatch", "./binaries/autovencordpatch")
-os.rename("./autopatch/autovencordpatch.exe", "./binaries/autovencordpatch.exe")
-os.remove("./autopatch/autovencordpatch.go")
-os.remove("./autopatch/autovencordpatch_win.go")
+os.rename("./autovencordpatch", "../binaries/autovencordpatch")
+os.rename("./autovencordpatch.exe", "../binaries/autovencordpatch.exe")
 
 for op in ["Windows", "Darwin"]:
     for openasar in [False, True]:
         build(openasar, op)
-os.system("cp ./autopatch/org.aaron.autovencordpatch.plist ./binaries/org.aaron.autovencordpatch.plist")
+os.system("cp ../autopatch/org.aaron.autovencordpatch.plist ../binaries/org.aaron.autovencordpatch.plist")
