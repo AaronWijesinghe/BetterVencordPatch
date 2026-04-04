@@ -11,8 +11,10 @@ import (
 	"github.com/fsnotify/fsnotify"
 )
 
+var discordAppName = "Discord.app"
+var discordJSON = "/Applications/" + discordAppName + "/Contents/Resources/build_info.json"
+
 const (
-	discordJSON   = "/Applications/Discord.app/Contents/Resources/build_info.json"
 	vencordApp    = "/Applications/VencordInstaller.app"
 	checkInterval = 1 * time.Second
 )

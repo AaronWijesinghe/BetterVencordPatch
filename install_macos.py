@@ -28,15 +28,10 @@ if platform.system() != "Darwin":
     print("failed")
     input("This operating system is not supported by this installer. ")
     exit()
-for dir in ["./files/", "./autopatch/" if use_autopatch else "./files/", "./installer/"]:
+for dir in ["./autopatch/" if use_autopatch else "./installer/", "./installer/"]:
     if not os.path.exists(dir):
         print("failed")
         input(f"The directory '{dir}' is missing. ")
-        exit()
-for file in ["./files/autovencordpatch.go" if use_autopatch else "./files/cli.go", "./files/cli.go"]:
-    if not os.path.exists(file):
-        print("failed")
-        input(f"The file '{file}' is missing. ")
         exit()
 print("done")
 
@@ -45,22 +40,11 @@ discords = {
     "ptb": "Discord PTB.app",
     "canary": "Discord Canary.app"
 }
-print("Preparing install environment...", end=" ", flush=True)
-if use_autopatch:
-    avp_code = open("./files/autovencordpatch.go", "r").read()
-    avp_code = avp_code.replace("Discord.app", discords[branch])
-    open("./autopatch/autovencordpatch.go", "w").write(avp_code)
-cli_code = open("./files/cli.go", "r").read()
-cli_code = cli_code.replace("var pyOpenAsar = false", f"var pyOpenAsar = {str(openasar).lower()}")
-cli_code = cli_code.replace("var pyBranch = \"stable\"", f"var pyBranch = \"{branch}\"")
-cli_code = cli_code.replace("var pySendSuccessNotifications = true", f"var pySendSuccessNotifications = {str(send_success_notifications).lower()}")
-open("./installer/cli.go", "w").write(cli_code)
-print("done")
 
 os.chdir("./installer/")
-build_vi = """
+build_vi = f"""
 go mod tidy
-CGO_ENABLED=0 go build --tags cli
+CGO_ENABLED=0 go build -ldflags=\"-X vencordinstaller.pyBranch='{branch}' -X vencordinstaller.pyOpenAsar='{openasar}' -X vencordinstaller.pySendSuccessNotifications='{send_success_notifications}'\" --tags cli
 mkdir -p VencordInstaller.app/Contents/MacOS
 mkdir -p VencordInstaller.app/Contents/Resources
 cp macos/Info.plist VencordInstaller.app/Contents/Info.plist
@@ -75,10 +59,9 @@ print("done")
 
 if use_autopatch:
     print("Building auto-patch binary...", end=" ", flush=True)
-    os.chdir("../autopatch/")
-    build_avp = """
+    build_avp = f"""
     go mod tidy
-    CGO_ENABLED=0 go build -o autovencordpatch autovencordpatch.go
+    CGO_ENABLED=0 go build -ldflags=\"-X vencordinstaller.discordAppName='{discords[branch]}'\" --tags avp_macos -o autovencordpatch
     chmod +x autovencordpatch
     mv autovencordpatch ../VencordInstaller.app/Contents/Resources/autovencordpatch
     """
@@ -102,11 +85,5 @@ if use_autopatch:
     """
     run_sh(install)
     print("done")
-
-print("Cleaning up...", end=" ", flush=True)
-os.remove("./installer/cli.go")
-if use_autopatch:
-    os.remove("./autopatch/autovencordpatch.go")
-print("done")
 
 input("\nSuccessfully installed BetterVencordPatch! ")
