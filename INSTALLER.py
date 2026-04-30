@@ -6,10 +6,23 @@ import getpass
 import platform
 import requests
 from sys import exit
+from pathlib import Path
+import subprocess
 
 os.chdir(os.path.dirname(__file__))
 def clear():
     os.system("cls" if platform.system() == "Windows" else "clear;clear")
+
+def get_windows_paths():
+    local_app_data = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
+    app_data = Path(os.environ.get("APPDATA", Path.home() / "AppData" / "Roaming"))
+    install_dir = local_app_data / "BetterVencordPatch"
+    startup_dir = app_data / "Microsoft" / "Windows" / "Start Menu" / "Programs" / "Startup"
+
+    return [
+        install_dir / "vencordinstaller.exe",
+        startup_dir / "autovencordpatch.exe",
+    ]
 
 clear()
 print("[BetterVencordPatch Installer]")
@@ -24,10 +37,7 @@ if not releases.ok:
     exit()
 
 paths = {
-    "Windows": [
-        f"C:/Users/{getpass.getuser()}/AppData/Local/BetterVencordPatch/vencordinstaller.exe",
-        f"C:/Users/{getpass.getuser()}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autovencordpatch.exe",
-    ],
+    "Windows": get_windows_paths(),
     "Darwin": [
         f"/Applications/VencordInstaller.app",
         f"/Applications/VencordInstaller.app/Contents/Resources/autovencordpatch",
@@ -36,7 +46,8 @@ paths = {
 
 if platform.system() == "Windows":
     os.system("taskkill /f /im autovencordpatch.exe >NUL 2>&1")
-    os.makedirs(f"C:/Users/{getpass.getuser()}/AppData/Local/BetterVencordPatch/", exist_ok=True)
+    paths["Windows"][0].parent.mkdir(parents=True, exist_ok=True)
+    paths["Windows"][1].parent.mkdir(parents=True, exist_ok=True)
 
 clear()
 print("[Downloading and moving required files...]")
@@ -55,10 +66,10 @@ for asset in rel[0]["assets"]:
             print(f"Successfully downloaded BetterVencordPatch")
     elif platform.system() == "Windows":
         if f"VencordInstaller-{"no_" if not openasar else ""}openasar.exe" == asset["name"]:
-            open(f"C:/Users/{getpass.getuser()}/AppData/Local/BetterVencordPatch/vencordinstaller.exe", "wb").write(requests.get(asset["browser_download_url"]).content)
+            open(paths["Windows"][0], "wb").write(requests.get(asset["browser_download_url"]).content)
             print(f"Successfully downloaded BetterVencordPatch")
         elif f"autovencordpatch.exe" == asset["name"] and autopatch:
-            open(f"C:/Users/{getpass.getuser()}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autovencordpatch.exe", "wb").write(requests.get(asset["browser_download_url"]).content)
+            open(paths["Windows"][1], "wb").write(requests.get(asset["browser_download_url"]).content)
             print(f"Successfully installed autopatch component")
 
 if platform.system() == "Darwin":
@@ -71,6 +82,13 @@ if platform.system() == "Darwin":
             os.system("chmod +x /Applications/VencordInstaller.app/Contents/Resources/autovencordpatch")
             print(f"Successfully installed autopatch component")
     os.system("open /Applications/VencordInstaller.app")
+
+if platform.system() == "Windows":
+    print("\n[Patching Discord with Vencord...]")
+    result = subprocess.run([str(paths["Windows"][0])])
+    if result.returncode != 0:
+        input("Failed to patch Discord with Vencord. ")
+        exit(result.returncode)
 
 print("\nSuccessfully installed BetterVencordPatch!")
 input("If you're on Windows and installed the auto-patcher, make sure to restart your computer so the auto-patcher can run. ")
