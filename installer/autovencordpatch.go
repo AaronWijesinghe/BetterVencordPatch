@@ -23,11 +23,15 @@ var discordASAR = "/Applications/" + apps[branch] + "/Contents/Resources/app.asa
 
 const (
 	vencordApp    = "/Applications/VencordInstaller.app"
+	vencordBinary = vencordApp + "/Contents/MacOS/VencordInstaller"
 	checkInterval = 1 * time.Second
 )
 
 func runInstaller() {
-	cmd := exec.Command("open", vencordApp)
+	// -install=false -repair re-downloads the latest (hash-verified) Vencord build and
+	// re-patches Discord, so Vencord itself is updated through Discord updates instead of
+	// only re-applying the existing loader.
+	cmd := exec.Command(vencordBinary, "-install=false", "-repair", "-branch", branch)
 	err := cmd.Start()
 	if err != nil {
 		fmt.Println("["+time.Now().Format("2006-01-02 15:04:05")+"] Failed to run installer:", err)
