@@ -37,8 +37,8 @@ def build(openasar, op):
 
 def build_installer():
     build_installer_win = f"""
-    WINEPREFIX="$HOME/.wine_py314" wine $HOME/.wine_py314/drive_c/Python314/python.exe -m pip install -r requirements.txt --upgrade
-    WINEPREFIX="$HOME/.wine_py314" wine $HOME/.wine_py314/drive_c/Python314/Scripts/pyinstaller.exe INSTALLER.py --onefile
+    wine $HOME/.wine/drive_c/Python314/python.exe -m pip install -r requirements.txt --upgrade
+    wine $HOME/.wine/drive_c/Python314/Scripts/pyinstaller.exe INSTALLER.py --onefile
     mv ./dist/INSTALLER.exe ./binaries/INSTALLER.exe
     rm -rf ./build/ ./dist/ INSTALLER.spec
     """
