@@ -73,7 +73,6 @@ if use_autopatch:
     print("Running auto-patch install scripts...", end=" ", flush=True)
     install = """
     cp autopatch/org.aaron.autovencordpatch.plist ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist
-    chmod 644 ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist
     launchctl unload ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist > /dev/null 2>&1
     launchctl load ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist > /dev/null 2>&1
     open /Applications/VencordInstaller.app
