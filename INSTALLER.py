@@ -4,6 +4,7 @@ import zipfile
 import getpass
 import platform
 import requests
+import subprocess
 from datetime import datetime
 from sys import exit
 
@@ -64,7 +65,7 @@ paths = {
 }
 
 if platform.system() == "Windows":
-    os.system("taskkill /f /im autovencordpatch.exe >NUL 2>&1")
+    subprocess.run(["taskkill", "/f", "/im", "autovencordpatch.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     os.makedirs(f"C:/Users/{getpass.getuser()}/AppData/Local/BetterVencordPatch/", exist_ok=True)
 
 clear()
@@ -81,12 +82,12 @@ for asset in releases[0]["assets"]:
                 with zipfile.ZipFile("VencordInstaller.app.zip", 'r') as zip_ref:
                     zip_ref.extractall("/Applications/")
             except:
-                os.system("rm -rf /Applications/VencordInstaller.app")
-                os.system("rm -rf VencordInstaller.app.zip")
+                subprocess.run(["rm", "-rf", "/Applications/VencordInstaller.app"])
+                subprocess.run(["rm", "-rf", "VencordInstaller.app.zip"])
                 input("Failed to extract the Vencord Installer.")
                 exit()
             shutil.move(f"/Applications/VencordInstaller-{"no_" if not openasar else ""}openasar.app", "/Applications/VencordInstaller.app")
-            os.system("chmod +x /Applications/VencordInstaller.app/Contents/MacOS/vencordinstaller")
+            subprocess.run(["chmod", "+x", "/Applications/VencordInstaller.app/Contents/MacOS/vencordinstaller"])
             os.remove("VencordInstaller.app.zip")
             print(f"Successfully downloaded BetterVencordPatch")
     elif platform.system() == "Windows":
@@ -102,18 +103,23 @@ for asset in releases[0]["assets"]:
 if platform.system() == "Darwin" and autopatch:
     for asset in releases[0]["assets"]:
         if asset["name"] == "org.aaron.autovencordpatch.plist":
+            uid = os.getuid()
+            plist_path = os.path.expanduser("~/Library/LaunchAgents/org.aaron.autovencordpatch.plist")
             autopatch_plist = download_file(session, asset["browser_download_url"])
             open(f"/Users/{getpass.getuser()}/Library/LaunchAgents/org.aaron.autovencordpatch.plist", "wb").write(autopatch_plist)
-            os.system("chmod 644 ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist")
-            os.system("launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist 2>&1")
-            os.system("launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist 2>&1")
+            subprocess.run(["chmod", "644", plist_path])
+            subprocess.run(["launchctl", "bootout", f"gui/{uid}", plist_path])
+            subprocess.run(["launchctl", "bootstrap", f"gui/{uid}", plist_path])
             print(f"Successfully installed autopatch launchd plist (macOS)")
         elif asset["name"] == "autovencordpatch":
             autopatch_darwin = download_file(session, asset["browser_download_url"])
             open(f"/Applications/VencordInstaller.app/Contents/Resources/autovencordpatch", "wb").write(autopatch_darwin)
-            os.system("chmod +x /Applications/VencordInstaller.app/Contents/Resources/autovencordpatch")
+            subprocess.run(["chmod", "+x", "/Applications/VencordInstaller.app/Contents/Resources/autovencordpatch"])
             print(f"Successfully installed autopatch component")
-    os.system("open /Applications/VencordInstaller.app")
+    subprocess.run(["open", "/Applications/VencordInstaller.app"])
+
+if not autopatch:
+    print("Skipped installing the autopatcher")
 
 session.close()
 print("\nSuccessfully installed BetterVencordPatch!")
