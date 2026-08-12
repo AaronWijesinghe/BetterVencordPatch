@@ -35,10 +35,30 @@ def build(openasar, op):
         run_sh(build_vi_darwin)
     os.system(f"mv VencordInstaller{suffix} ../binaries/VencordInstaller-{"no_" if not openasar else ""}openasar{suffix}")
 
+def build_installer():
+    build_installer_win = f"""
+    WINEPREFIX="$HOME/.wine_py314" wine $HOME/.wine_py314/drive_c/Python314/python.exe -m pip install -r requirements.txt --upgrade
+    WINEPREFIX="$HOME/.wine_py314" wine $HOME/.wine_py314/drive_c/Python314/Scripts/pyinstaller.exe INSTALLER.py --onefile
+    mv ./dist/INSTALLER.exe ./binaries/INSTALLER.exe
+    rm -rf ./build/ ./dist/ INSTALLER.spec
+    """
+
+    build_installer_darwin = f"""
+    pip3 install -r requirements.txt --upgrade
+    pyinstaller INSTALLER.py --onefile
+    mv ./dist/INSTALLER ./binaries/INSTALLER
+    rm -rf ./build/ ./dist/ INSTALLER.spec
+    """
+
+    run_sh(build_installer_win)
+    run_sh(build_installer_darwin)
+
 clear()
 if os.path.exists("./binaries/"):
-    shutil.rmtree("./binaries")
+    shutil.rmtree("./binaries/")
 os.mkdir("./binaries/")
+
+build_installer()
 
 os.chdir("./installer/")
 build_avp = f"""

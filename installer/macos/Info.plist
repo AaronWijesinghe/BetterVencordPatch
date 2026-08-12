@@ -16,5 +16,8 @@
 
         <key>LSUIElement</key>
         <true/>
+
+        <key>CFBundleShortVersionString</key>
+        <string>1.4.0</string>
     </dict>
 </plist>
