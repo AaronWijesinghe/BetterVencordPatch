@@ -3,8 +3,7 @@ import shutil
 
 os.chdir(os.path.dirname(__file__))
 def clear():
-    for i in range(2):
-        os.system("clear")
+    print("\033[2J\033[3J\033[H", end='')
 
 def run_sh(sh):
     for cmd in sh.split("\n"):
