@@ -7,12 +7,16 @@ import platform
 import requests
 from sys import exit
 
+gold = "\033[0;33m"
+bold = "\033[1m"
+end = "\033[0m"
+
 os.chdir(os.path.dirname(__file__))
 def clear():
     print("\033[2J\033[3J\033[H", end='')
 
 clear()
-print("[BetterVencordPatch Installer]")
+print(f"{bold}{gold}[BetterVencordPatch Installer]{end}")
 print("This installer will download the latest files from GitHub.")
 print("")
 autopatch = input("Automatically patch Discord with Vencord through updates (y/N)? ").lower().strip() == "y"
@@ -39,7 +43,7 @@ if platform.system() == "Windows":
     os.makedirs(f"C:/Users/{getpass.getuser()}/AppData/Local/BetterVencordPatch/", exist_ok=True)
 
 clear()
-print("[Downloading and moving required files...]")
+print(f"{bold}{gold}[Downloading and moving required files...]{end}")
 rel = json.loads(releases.text)
 for asset in rel[0]["assets"]:
     if platform.system() == "Darwin":
