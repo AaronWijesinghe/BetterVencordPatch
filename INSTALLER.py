@@ -77,8 +77,14 @@ for asset in releases[0]["assets"]:
             open("VencordInstaller.app.zip", "wb").write(vi_app_darwin)
             if os.path.exists("/Applications/VencordInstaller.app"):
                 shutil.rmtree("/Applications/VencordInstaller.app")
-            with zipfile.ZipFile("VencordInstaller.app.zip", 'r') as zip_ref:
-                zip_ref.extractall("/Applications/")
+            try:
+                with zipfile.ZipFile("VencordInstaller.app.zip", 'r') as zip_ref:
+                    zip_ref.extractall("/Applications/")
+            except:
+                os.system("rm -rf /Applications/VencordInstaller.app")
+                os.system("rm -rf VencordInstaller.app.zip")
+                input("Failed to extract the Vencord Installer.")
+                exit()
             shutil.move(f"/Applications/VencordInstaller-{"no_" if not openasar else ""}openasar.app", "/Applications/VencordInstaller.app")
             os.system("chmod +x /Applications/VencordInstaller.app/Contents/MacOS/vencordinstaller")
             os.remove("VencordInstaller.app.zip")
