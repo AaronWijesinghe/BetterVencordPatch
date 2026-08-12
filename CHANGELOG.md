@@ -6,6 +6,7 @@ There have been bugfixes made to the installer that aren't present in prior vers
 - Improved the formatting of the installer with ANSI formatting (711efac)
 - Replaced the clear() function of the installer with a non-OS-specific clear() function (148eaa9)
 - Give the right permissions to the macOS launchd .plist file when installing BetterVencordPatch (802b828)
+- Show the version of BetterVencordPatch that will be installed (f2c978b)
 
 ### Version 0.4.2
 - Fixed an issue where Vencord wouldn't patch when choosing to patch OpenAsar
