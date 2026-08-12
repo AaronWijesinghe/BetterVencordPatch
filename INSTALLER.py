@@ -9,7 +9,7 @@ from sys import exit
 
 os.chdir(os.path.dirname(__file__))
 def clear():
-    os.system("cls" if platform.system() == "Windows" else "clear;clear")
+    print("\033[2J\033[3J\033[H", end='')
 
 clear()
 print("[BetterVencordPatch Installer]")
