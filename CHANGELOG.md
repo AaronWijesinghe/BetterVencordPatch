@@ -8,6 +8,11 @@ Updates have been made to the installer that aren't present in prior versions.
 - Give the right permissions to the macOS launchd .plist file when installing BetterVencordPatch (802b828)
 - Show the version of BetterVencordPatch that will be installed (f2c978b)
 - Show the date and time of the latest release within INSTALLER (1f8c067)
+- Use requests.Session() within INSTALLER to improve download times (ad56a83)
+- Use .json() instead of json.loads() within INSTALLER (6f9e943)
+- If the autopatcher isn't selected when running INSTALLER on macOS, the launchd plist won't be installed (9360da5)
+- If unzipping VencordInstaller.app.zip fails, INSTALLER will properly clean up (31c9ad7)
+- Use subprocess.run instead of os.system to improve security (5c15f18)
 
 ### Version 0.4.2
 - Fixed an issue where Vencord wouldn't patch when choosing to patch OpenAsar
