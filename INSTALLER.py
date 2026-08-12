@@ -70,6 +70,8 @@ if platform.system() == "Darwin":
         if asset["name"] == "org.aaron.autovencordpatch.plist":
             open(f"/Users/{getpass.getuser()}/Library/LaunchAgents/org.aaron.autovencordpatch.plist", "wb").write(requests.get(asset["browser_download_url"]).content)
             os.system("chmod 644 ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist")
+            os.system("launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist 2>&1")
+            os.system("launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist 2>&1")
             print(f"Successfully installed autopatch launchd plist (macOS)")
         elif asset["name"] == "autovencordpatch" and autopatch:
             open(f"/Applications/VencordInstaller.app/Contents/Resources/autovencordpatch", "wb").write(requests.get(asset["browser_download_url"]).content)

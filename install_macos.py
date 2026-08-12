@@ -77,8 +77,8 @@ if use_autopatch:
     install = """
     cp autopatch/org.aaron.autovencordpatch.plist ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist
     chmod 644 ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist
-    launchctl unload ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist > /dev/null 2>&1
-    launchctl load ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist > /dev/null 2>&1
+    launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist 2>&1
+    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist 2>&1
     open /Applications/VencordInstaller.app
     """
     run_sh(install)
