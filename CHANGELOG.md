@@ -1,3 +1,12 @@
+### Version 0.5.0
+**You must redownload INSTALLER/INSTALLER.exe.**
+There have been bugfixes made to the installer that aren't present in prior versions.
+- [#9](https://github.com/AaronWijesinghe/BetterVencordPatch/pull/9) - Verify SHA-256 of downloaded assets before installing them
+- [#10](https://github.com/AaronWijesinghe/BetterVencordPatch/pull/10) - Make sure Vencord updates when Discord updates
+- Improved the formatting of the installer with ANSI formatting (711efac)
+- Replaced the clear() function of the installer with a non-OS-specific clear() function (148eaa9)
+- Give the right permissions to the macOS launchd .plist file when installing BetterVencordPatch (802b828)
+
 ### Version 0.4.2
 - Fixed an issue where Vencord wouldn't patch when choosing to patch OpenAsar
 - Show a permission error dialog if OpenAsar can't be patched

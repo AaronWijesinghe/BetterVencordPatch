@@ -59,7 +59,7 @@ func main() {
 	flag.Parse()
 
 	if *versionFlag {
-		fmt.Println("BetterVencordPatch v0.4.2")
+		fmt.Println("BetterVencordPatch v0.5.0")
 		fmt.Println("Includes the Vencord Installer CLI (v1.4.0, modified)")
 		fmt.Println("Modified by @AaronWijesinghe to install Vencord without user interaction")
 		fmt.Println("\nCopyright (C) 2023 Vendicated and Vencord contributors")
