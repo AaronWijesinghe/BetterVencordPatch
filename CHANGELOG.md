@@ -7,7 +7,7 @@ Updates have been made to the installer that aren't present in prior versions.
 - Replaced the clear() function of the installer with a non-OS-specific clear() function (148eaa9)
 - Give the right permissions to the macOS launchd .plist file when installing BetterVencordPatch (802b828)
 - Show the version of BetterVencordPatch that will be installed (f2c978b)
-- Show the date and time of the latest release within INSTALLER ()
+- Show the date and time of the latest release within INSTALLER (1f8c067)
 
 ### Version 0.4.2
 - Fixed an issue where Vencord wouldn't patch when choosing to patch OpenAsar
