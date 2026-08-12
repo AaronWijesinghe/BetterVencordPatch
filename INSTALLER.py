@@ -5,6 +5,7 @@ import zipfile
 import getpass
 import platform
 import requests
+from datetime import datetime
 from sys import exit
 
 gold = "\033[0;33m"
@@ -31,13 +32,14 @@ if len(releases) == 0:
     input("Release data is invalid. The installer cannot continue.")
     exit()
 
-if "name" not in releases[0]:
+if "name" not in releases[0] or "published_at" not in releases[0]:
     input("Release data is invalid. The installer cannot continue.")
     exit()
 
 bvp_version = releases[0]["name"]
+published_timestamp = datetime.fromisoformat(releases[0]["published_at"])
 print("This installer will download the latest files from GitHub Releases.")
-print(f"Latest available version: {bvp_version}")
+print(f"Latest available version: {bvp_version} (released {published_timestamp})")
 autopatch = input("\nAutomatically patch Discord with Vencord through updates (y/N)? ").lower().strip() == "y"
 openasar = input("Patch OpenAsar (y/N)? ").lower().strip() == "y"
 

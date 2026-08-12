@@ -1,6 +1,6 @@
 ### Version 0.5.0
-**You must redownload INSTALLER/INSTALLER.exe.**
-There have been bugfixes made to the installer that aren't present in prior versions.
+**You must redownload INSTALLER/INSTALLER.exe.**<br>
+Updates have been made to the installer that aren't present in prior versions.
 - [#9](https://github.com/AaronWijesinghe/BetterVencordPatch/pull/9) - Verify SHA-256 of downloaded assets before installing them
 - [#10](https://github.com/AaronWijesinghe/BetterVencordPatch/pull/10) - Make sure Vencord updates when Discord updates
 - Improved the formatting of the installer with ANSI formatting (711efac)
