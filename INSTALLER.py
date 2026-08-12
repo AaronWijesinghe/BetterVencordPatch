@@ -37,7 +37,7 @@ except requests.exceptions.ConnectionError:
     input("Couldn't fetch release data from GitHub.")
     exit()
 
-releases = json.loads(releases_req.text)
+releases = releases_req.json()
 if len(releases) == 0:
     input("Release data is invalid. The installer cannot continue.")
     exit()
