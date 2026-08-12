@@ -14,7 +14,7 @@ clear()
 print(f"{bold}{gold}[BetterVencordPatch Installer (Windows)]{end}")
 branch = input("Enter the branch of Discord to be patched by Vencord (stable, ptb, canary): ")
 if branch not in ["stable", "ptb", "canary"]:
-    input("This branch of Discord doesn't exist. ")
+    input("This branch of Discord doesn't exist.")
     exit()
 openasar = input("Patch this branch of Discord with OpenAsar (y/N)? ").lower().strip() == "y"
 use_autopatch = input("Patch this branch of Discord through updates (y/N)? ").lower().strip() == "y"
@@ -27,12 +27,12 @@ print("\nRunning pre-install checks...", end=" ", flush=True)
 os.makedirs(f"C:/Users/{getpass.getuser()}/AppData/Local/bettervencordpatch/", exist_ok=True)
 if platform.system() != "Windows":
     print("failed")
-    input("This operating system is not supported by this installer. ")
+    input("This operating system is not supported by this installer.")
     exit()
 for dir in ["./autopatch/" if use_autopatch else "./installer/"]:
     if not os.path.exists(dir):
         print("failed")
-        input(f"The directory '{dir}' is missing. ")
+        input(f"The directory '{dir}' is missing.")
         exit()
 print("done")
 

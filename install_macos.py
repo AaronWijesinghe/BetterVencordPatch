@@ -17,7 +17,7 @@ clear()
 print(f"{bold}{gold}[BetterVencordPatch Installer (macOS)]{end}")
 branch = input("Enter the branch of Discord to be patched by Vencord (stable, ptb, canary): ")
 if branch not in ["stable", "ptb", "canary"]:
-    input("This branch of Discord doesn't exist. ")
+    input("This branch of Discord doesn't exist.")
     exit()
 openasar = input("Patch this branch of Discord with OpenAsar (y/N)? ").lower().strip() == "y"
 use_autopatch = input("Patch this branch of Discord through updates (y/N)? ").lower().strip() == "y"
@@ -29,12 +29,12 @@ print(f"Installing with preferences: branch='{branch}', openasar={openasar}, use
 print("\nRunning pre-install checks...", end=" ", flush=True)
 if platform.system() != "Darwin":
     print("failed")
-    input("This operating system is not supported by this installer. ")
+    input("This operating system is not supported by this installer.")
     exit()
 for dir in ["./autopatch/" if use_autopatch else "./installer/", "./installer/"]:
     if not os.path.exists(dir):
         print("failed")
-        input(f"The directory '{dir}' is missing. ")
+        input(f"The directory '{dir}' is missing.")
         exit()
 print("done")
 
