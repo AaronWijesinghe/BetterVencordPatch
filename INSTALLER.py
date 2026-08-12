@@ -74,5 +74,8 @@ if platform.system() == "Darwin":
     os.system("open /Applications/VencordInstaller.app")
 
 print("\nSuccessfully installed BetterVencordPatch!")
-input("If you're on Windows and installed the auto-patcher, make sure to restart your computer so the auto-patcher can run. ")
+if platform.system() == "Windows" and autopatch == True:
+    input("Make sure to restart your computer so the auto-patcher can run.")
+else:
+    input("Press ENTER to exit.")
 exit()
