@@ -1,8 +1,8 @@
 ### Version 0.5.0
 **You must redownload INSTALLER/INSTALLER.exe.**<br>
 Updates have been made to the installer that aren't present in prior versions.
-- [#9](https://github.com/AaronWijesinghe/BetterVencordPatch/pull/9) - Verify SHA-256 of downloaded assets before installing them
-- [#10](https://github.com/AaronWijesinghe/BetterVencordPatch/pull/10) - Make sure Vencord updates when Discord updates
+- [#9, Lani0516](https://github.com/AaronWijesinghe/BetterVencordPatch/pull/9) - Verify SHA-256 of downloaded assets before installing them
+- [#10, Lani0516](https://github.com/AaronWijesinghe/BetterVencordPatch/pull/10) - Make sure Vencord updates when Discord updates
 - Improved the formatting of the installer with ANSI formatting (711efac)
 - Replaced the clear() function of the installer with a non-OS-specific clear() function (148eaa9)
 - Give the right permissions to the macOS launchd .plist file when installing BetterVencordPatch (802b828)
@@ -20,6 +20,7 @@ Updates have been made to the installer that aren't present in prior versions.
 - Fixed an issue where injected variables (such as branch, sending success notifications, and OpenAsar installation) wouldn't take effect even if their respective options were changed
 
 ### Version 0.4.0
+- [#4, v81d](https://github.com/AaronWijesinghe/BetterVencordPatch/pull/4) - Show yes/no prompt defaults in all installers
 - Attempted to fix Windows auto-patching
     - The autopatcher now scans for Discord.ico updates, since this file always gets overwritten when an update occurs
 - Added redundancy to the macOS autopatcher
