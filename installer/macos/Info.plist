@@ -17,6 +17,12 @@
         <key>LSUIElement</key>
         <true/>
 
+        <key>StandardOutPath</key>
+        <string>/tmp/autovencordpatch.log</string>
+        
+        <key>StandardErrorPath</key>
+        <string>/tmp/autovencordpatch.log</string>
+
         <key>CFBundleShortVersionString</key>
         <string>1.4.0</string>
     </dict>
