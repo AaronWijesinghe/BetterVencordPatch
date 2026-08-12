@@ -18,7 +18,7 @@ All the required files will be downloaded for you.
 **You have much more control over your installation when installing from source, including the Discord branch which is patched and whether or not to send notifications on success.**</br>
 All original requirements for building the official installer apply here.</br>
 Run install_[YOUR OPERATING SYSTEM].py to install BetterVencordPatch from source.</br>
-To install from source, install Python 3.x and Go 1.25.x. The dependencies will be automatically installed.
+To install from source, install Python 3.x and Go 1.25.x. The dependencies will automatically be installed.
 
 # Building from Source
 If you want build BetterVencordPatch and/or its autopatcher without installing BetterVencordPatch, see below.</br>
@@ -29,6 +29,8 @@ Make sure not to put quotes around any arguments.
 You can use these commands to build the installer (arguments explained below):
 - Windows: `go build -ldflags="-H=windowsgui -X main.branch=BRANCH -X main.patchOpenAsar=USE_OPEN_ASAR -X main.sendSuccessNotifications=SEND_SUCCESS_NOTIFICATIONS" --tags cli`
 - macOS: `go build -ldflags="-X main.branch=BRANCH -X main.patchOpenAsar=USE_OPEN_ASAR -X main.sendSuccessNotifications=SEND_SUCCESS_NOTIFICATIONS" --tags cli`
+- Windows (simplified): `go build -ldflags="-H=windowsgui" --tags cli`
+- macOS (simplified): `go build --tags cli`
 
 These arguments can be used to customize the Vencord installer:
 - BRANCH: The Discord branch that BetterVencordPatch will patch
