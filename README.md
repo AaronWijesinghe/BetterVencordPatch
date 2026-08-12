@@ -25,14 +25,14 @@ If you want build BetterVencordPatch and/or its autopatcher without installing B
 To build from source, install Python 3.x and Go 1.25.x.
 Make sure not to put quotes around any arguments.
 
-## Building the Installer
-You can use these commands to build the installer (arguments explained below):
+## Building the Vencord Installer
+You can use these commands to build the Vencord Installer (arguments explained below):
 - Windows: `go build -ldflags="-H=windowsgui -X main.branch=BRANCH -X main.patchOpenAsar=USE_OPEN_ASAR -X main.sendSuccessNotifications=SEND_SUCCESS_NOTIFICATIONS" --tags cli`
 - macOS: `go build -ldflags="-X main.branch=BRANCH -X main.patchOpenAsar=USE_OPEN_ASAR -X main.sendSuccessNotifications=SEND_SUCCESS_NOTIFICATIONS" --tags cli`
 - Windows (simplified): `go build -ldflags="-H=windowsgui" --tags cli`
 - macOS (simplified): `go build --tags cli`
 
-These arguments can be used to customize the Vencord installer:
+These arguments can be used to customize the Vencord Installer:
 - BRANCH: The Discord branch that BetterVencordPatch will patch
     - Type: string
     - Possible values: stable | ptb | canary
