@@ -95,7 +95,7 @@ for asset in releases[0]["assets"]:
 
 if platform.system() == "Darwin":
     for asset in releases[0]["assets"]:
-        if asset["name"] == "org.aaron.autovencordpatch.plist":
+        if asset["name"] == "org.aaron.autovencordpatch.plist" and autopatch:
             autopatch_plist = download_file(session, asset["browser_download_url"])
             open(f"/Users/{getpass.getuser()}/Library/LaunchAgents/org.aaron.autovencordpatch.plist", "wb").write(autopatch_plist)
             os.system("chmod 644 ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist")
