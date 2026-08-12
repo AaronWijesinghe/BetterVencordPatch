@@ -17,15 +17,29 @@ def clear():
 
 clear()
 print(f"{bold}{gold}[BetterVencordPatch Installer]{end}")
-print("This installer will download the latest files from GitHub.")
-print("")
-autopatch = input("Automatically patch Discord with Vencord through updates (y/N)? ").lower().strip() == "y"
-openasar = input("Patch OpenAsar (y/N)? ").lower().strip() == "y"
 
-releases = requests.get("https://api.github.com/repos/introvertednoob/bettervencordpatch/releases")
-if not releases.ok:
-    print("\nCouldn't fetch releases. Exiting...")
+try:
+    releases_req = requests.get("https://api.github.com/repos/AaronWijesinghe/BetterVencordPatch/releases")
+    if not releases_req.ok:
+        raise requests.exceptions.ConnectionError
+except requests.exceptions.ConnectionError:
+    input("Couldn't fetch release data from GitHub.")
     exit()
+
+releases = json.loads(releases_req.text)
+if len(releases) == 0:
+    input("Release data is invalid. The installer cannot continue.")
+    exit()
+
+if "name" not in releases[0]:
+    input("Release data is invalid. The installer cannot continue.")
+    exit()
+
+bvp_version = releases[0]["name"]
+print("This installer will download the latest files from GitHub Releases.")
+print(f"Latest available version: {bvp_version}")
+autopatch = input("\nAutomatically patch Discord with Vencord through updates (y/N)? ").lower().strip() == "y"
+openasar = input("Patch OpenAsar (y/N)? ").lower().strip() == "y"
 
 paths = {
     "Windows": [
@@ -44,8 +58,7 @@ if platform.system() == "Windows":
 
 clear()
 print(f"{bold}{gold}[Downloading and moving required files...]{end}")
-rel = json.loads(releases.text)
-for asset in rel[0]["assets"]:
+for asset in releases[0]["assets"]:
     if platform.system() == "Darwin":
         if f"VencordInstaller-{"no_" if not openasar else ""}openasar.app.zip" == asset["name"]:
             open("VencordInstaller.app.zip", "wb").write(requests.get(asset["browser_download_url"]).content)
@@ -66,7 +79,7 @@ for asset in rel[0]["assets"]:
             print(f"Successfully installed autopatch component")
 
 if platform.system() == "Darwin":
-    for asset in rel[0]["assets"]:
+    for asset in releases[0]["assets"]:
         if asset["name"] == "org.aaron.autovencordpatch.plist":
             open(f"/Users/{getpass.getuser()}/Library/LaunchAgents/org.aaron.autovencordpatch.plist", "wb").write(requests.get(asset["browser_download_url"]).content)
             os.system("chmod 644 ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist")
