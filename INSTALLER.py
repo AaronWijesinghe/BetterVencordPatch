@@ -93,16 +93,16 @@ for asset in releases[0]["assets"]:
             open(f"C:/Users/{getpass.getuser()}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autovencordpatch.exe", "wb").write(autopatch_win)
             print(f"Successfully installed autopatch component")
 
-if platform.system() == "Darwin":
+if platform.system() == "Darwin" and autopatch:
     for asset in releases[0]["assets"]:
-        if asset["name"] == "org.aaron.autovencordpatch.plist" and autopatch:
+        if asset["name"] == "org.aaron.autovencordpatch.plist":
             autopatch_plist = download_file(session, asset["browser_download_url"])
             open(f"/Users/{getpass.getuser()}/Library/LaunchAgents/org.aaron.autovencordpatch.plist", "wb").write(autopatch_plist)
             os.system("chmod 644 ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist")
             os.system("launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist 2>&1")
             os.system("launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/org.aaron.autovencordpatch.plist 2>&1")
             print(f"Successfully installed autopatch launchd plist (macOS)")
-        elif asset["name"] == "autovencordpatch" and autopatch:
+        elif asset["name"] == "autovencordpatch":
             autopatch_darwin = download_file(session, asset["browser_download_url"])
             open(f"/Applications/VencordInstaller.app/Contents/Resources/autovencordpatch", "wb").write(autopatch_darwin)
             os.system("chmod +x /Applications/VencordInstaller.app/Contents/Resources/autovencordpatch")
