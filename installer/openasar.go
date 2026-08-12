@@ -18,7 +18,9 @@ import (
 	"strconv"
 )
 
-const OpenAsarDownloadLink = "https://github.com/GooseMod/OpenAsar/releases/download/nightly/app.asar"
+// Fetched via the GitHub API (rather than the raw download URL) so we also receive the
+// published SHA-256 digest used to verify the asar before installing it.
+const OpenAsarReleaseUrl = "https://api.github.com/repos/GooseMod/OpenAsar/releases/tags/nightly"
 
 func FindAsarFile(dir string) (*os.File, error) {
 	for _, file := range []string{"_app.asar", "app.asar"} {
@@ -82,19 +84,42 @@ func (di *DiscordInstall) InstallOpenAsar() error {
 		return err
 	}
 
-	res, err := http.Get(OpenAsarDownloadLink)
+	release, err := GetGithubRelease(OpenAsarReleaseUrl, OpenAsarReleaseUrl)
+	if err != nil {
+		return err
+	}
+
+	var downloadUrl, digest string
+	for _, asset := range release.Assets {
+		if asset.Name == "app.asar" {
+			downloadUrl = asset.DownloadURL
+			digest = asset.Digest
+			break
+		}
+	}
+	if downloadUrl == "" {
+		return errors.New("Could not find app.asar in the latest OpenAsar release")
+	}
+
+	res, err := http.Get(downloadUrl)
 	if err != nil {
 		return err
 	} else if res.StatusCode >= 300 {
 		return errors.New("Failed to fetch OpenAsar - " + strconv.Itoa(res.StatusCode) + ": " + res.Status)
 	}
+	defer res.Body.Close()
 
-	outFile, err := os.Create(asarFile.Name())
+	data, err := io.ReadAll(res.Body)
 	if err != nil {
 		return err
 	}
 
-	if _, err = io.Copy(outFile, res.Body); err != nil {
+	// Verify against the SHA-256 GitHub published before writing the asar Discord will run.
+	if err = verifyDigest("app.asar", data, digest); err != nil {
+		return err
+	}
+
+	if err = os.WriteFile(asarFile.Name(), data, 0644); err != nil {
 		return err
 	}
 

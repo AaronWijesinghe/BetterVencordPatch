@@ -10,6 +10,8 @@ package main
 
 import (
 	"bufio"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -22,12 +24,40 @@ import (
 	"sync"
 )
 
+// verifyDigest checks that data matches the GitHub-published digest (e.g. "sha256:abc...").
+// If digest is empty (e.g. the vencord.dev fallback didn't supply one), verification is
+// skipped with a warning rather than failing the install.
+func verifyDigest(name string, data []byte, digest string) error {
+	if digest == "" {
+		Log.Warn("No digest published for", name, "- skipping hash verification")
+		return nil
+	}
+
+	expected, ok := strings.CutPrefix(digest, "sha256:")
+	if !ok {
+		return errors.New("Unsupported digest format for " + name + ": " + digest)
+	}
+
+	sum := sha256.Sum256(data)
+	actual := hex.EncodeToString(sum[:])
+	if !strings.EqualFold(actual, expected) {
+		return errors.New("Hash mismatch for " + name + " - expected " + expected + " but got " + actual + ". Refusing to install possibly tampered file.")
+	}
+
+	Log.Debug("Verified SHA-256 of", name)
+	return nil
+}
+
 type GithubRelease struct {
 	Name    string `json:"name"`
 	TagName string `json:"tag_name"`
 	Assets  []struct {
 		Name        string `json:"name"`
 		DownloadURL string `json:"browser_download_url"`
+		// Digest is the integrity hash GitHub publishes for each asset, e.g. "sha256:abc...".
+		// It is served over the authenticated api.github.com TLS response, so we treat it as
+		// the trusted source of truth for verifying the bytes we download.
+		Digest string `json:"digest"`
 	} `json:"assets"`
 }
 
@@ -170,24 +200,37 @@ func installLatestBuilds() (retErr error) {
 					retErr = err
 					return
 				}
-				outFile := path.Join(FilesDir, ass.Name)
-				out, err := os.OpenFile(outFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+				defer res.Body.Close()
+
+				// Buffer the asset so we can verify it in full before writing it to disk.
+				// These files are small (a few hundred KB at most).
+				data, err := io.ReadAll(res.Body)
 				if err != nil {
-					Log.Error("Failed to create", outFile+":", err)
+					Log.Error("Failed to download", ass.Name+":", err)
 					retErr = err
 					return
 				}
-				read, err := io.Copy(out, res.Body)
-				if err != nil {
-					Log.Error("Failed to download to", outFile+":", err)
-					retErr = err
-					return
-				}
+
 				contentLength := res.Header.Get("Content-Length")
-				expected := strconv.FormatInt(read, 10)
-				if expected != contentLength {
-					err = errors.New("Unexpected end of input. Content-Length was " + contentLength + ", but I only read " + expected)
+				read := strconv.FormatInt(int64(len(data)), 10)
+				if contentLength != "" && read != contentLength {
+					err = errors.New("Unexpected end of input. Content-Length was " + contentLength + ", but I only read " + read)
 					Log.Error(err.Error())
+					retErr = err
+					return
+				}
+
+				// Verify the bytes match the SHA-256 GitHub published for this asset before
+				// writing anything that Discord will later execute.
+				if err = verifyDigest(ass.Name, data, ass.Digest); err != nil {
+					Log.Error(err.Error())
+					retErr = err
+					return
+				}
+
+				outFile := path.Join(FilesDir, ass.Name)
+				if err = os.WriteFile(outFile, data, 0644); err != nil {
+					Log.Error("Failed to write", outFile+":", err)
 					retErr = err
 					return
 				}
