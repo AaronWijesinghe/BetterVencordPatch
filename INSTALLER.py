@@ -93,17 +93,17 @@ def install():
                 shutil.move(f"/Applications/VencordInstaller-{"no_" if not openasar else ""}openasar.app", paths["installer"][op])
                 subprocess.run(["chmod", "+x", "/Applications/VencordInstaller.app/Contents/MacOS/vencordinstaller"])
                 os.remove("VencordInstaller.app.zip")
-                print(f"Successfully downloaded BetterVencordPatch")
+                print(f"Downloaded BetterVencordPatch")
         elif op == "Windows":
             if f"VencordInstaller-{"no_" if not openasar else ""}openasar.exe" == asset["name"]:
                 vi_app_path = os.path.expanduser("~/AppData/Local/BetterVencordPatch/vencordinstaller.exe")
                 vi_app_win = download_file(session, asset["browser_download_url"])
                 open(vi_app_path, "wb").write(vi_app_win)
-                print(f"Successfully downloaded BetterVencordPatch")
+                print(f"Downloaded BetterVencordPatch")
             elif f"autovencordpatch.exe" == asset["name"] and autopatch:
                 autopatch_win = download_file(session, asset["browser_download_url"])
                 open(paths["autopatcher"][op], "wb").write(autopatch_win)
-                print(f"Successfully installed autopatch component")
+                print(f"Installed autopatch component")
 
     if op == "Darwin" and autopatch:
         for asset in releases[0]["assets"]:
@@ -112,14 +112,14 @@ def install():
                 autopatch_plist = download_file(session, asset["browser_download_url"])
                 open(paths["autopatcher_plist"], "wb").write(autopatch_plist)
                 subprocess.run(["chmod", "644", paths["autopatcher_plist"]])
-                subprocess.run(["launchctl", "bootout", f"gui/{uid}", paths["autopatcher_plist"]])
-                subprocess.run(["launchctl", "bootstrap", f"gui/{uid}", paths["autopatcher_plist"]])
-                print(f"Successfully installed autopatch launchd plist (macOS)")
+                subprocess.run(["launchctl", "bootout", f"gui/{uid}", paths["autopatcher_plist"]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                subprocess.run(["launchctl", "bootstrap", f"gui/{uid}", paths["autopatcher_plist"]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                print(f"Installed autopatch launchd plist (macOS)")
             elif asset["name"] == "autovencordpatch":
                 autopatch_darwin = download_file(session, asset["browser_download_url"])
                 open(f"/Applications/VencordInstaller.app/Contents/Resources/autovencordpatch", "wb").write(autopatch_darwin)
                 subprocess.run(["chmod", "+x", "/Applications/VencordInstaller.app/Contents/Resources/autovencordpatch"])
-                print(f"Successfully installed autopatch component")
+                print(f"Installed autopatch component")
         subprocess.run(["open", "/Applications/VencordInstaller.app"])
 
     if not autopatch:
