@@ -134,15 +134,16 @@ def install():
 def uninstall():
     clear()
     print(f"{gold}[BetterVencordPatch Uninstaller]{end}")
+    input("Press ENTER to confirm uninstallation.")
 
     op = platform.system()
     if op == "Darwin":
         uid = os.getuid()
         if os.path.exists(paths["installer"][op]):
             shutil.rmtree(paths["installer"][op])
-            print("Removed the Vencord Installer")
+            print("\nRemoved the Vencord Installer")
         else:
-            print("Skipped uninstalling the Vencord Installer as it doesn't exist")
+            print("\nSkipped uninstalling the Vencord Installer as it doesn't exist")
 
         if os.path.exists(paths["autopatcher_plist"]):
             subprocess.run(["launchctl", "bootout", f"gui/{uid}", paths["autopatcher_plist"]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -153,6 +154,7 @@ def uninstall():
     elif op == "Windows":
         subprocess.run(["taskkill", "/f", "/im", "autovencordpatch.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(["taskkill", "/f", "/im", "vencordinstaller.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print("Stopped running processes")
 
         if os.path.exists(paths["installer"][op]):
             shutil.rmtree(f"{paths["installer"][op]}/..")
