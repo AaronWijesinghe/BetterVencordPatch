@@ -128,9 +128,8 @@ def install():
     session.close()
     print("\nSuccessfully installed BetterVencordPatch!")
     if op == "Windows" and autopatch == True:
-        input("Make sure to restart your computer so the auto-patcher can run.")
-    else:
-        input("Press ENTER to return to the main menu.")
+        subprocess.run(["start", paths["autopatcher"][op]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    input("Press ENTER to return to the main menu.")
 
 def uninstall():
     clear()
