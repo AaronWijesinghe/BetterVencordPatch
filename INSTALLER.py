@@ -158,7 +158,7 @@ def uninstall():
             print("Skipped uninstalling the Vencord Installer as it doesn't exist")
 
         if os.path.exists(paths["autopatcher"][op]):
-            os.remove(paths["installer"][op])
+            os.remove(paths["autopatcher"][op])
             print("Removed the autopatcher")
         else:
             print("Skipped uninstalling the autopatcher as it doesn't exist")
