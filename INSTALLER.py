@@ -133,7 +133,7 @@ def install():
 
 def uninstall():
     clear()
-    print(f"{gold}[BetterVencordPatch Uninstaller]{end}")
+    print(f"{gold}[BetterVencordPatch Installer]{end}")
     input("Press ENTER to confirm uninstallation.")
 
     op = platform.system()
