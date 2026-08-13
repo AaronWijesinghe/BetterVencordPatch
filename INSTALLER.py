@@ -151,6 +151,9 @@ def uninstall():
         else:
             print("Skipped uninstalling the autopatcher launchd plist as it doesn't exist")
     elif op == "Windows":
+        subprocess.run(["taskkill", "/f", "/im", "autovencordpatch.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(["taskkill", "/f", "/im", "vencordinstaller.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
         if os.path.exists(paths["installer"][op]):
             shutil.rmtree(f"{paths["installer"][op]}/..")
             print("Removed the Vencord Installer")
