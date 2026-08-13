@@ -4,14 +4,16 @@
 package main
 
 import (
-	"github.com/go-toast/toast"
+	"github.com/gen2brain/beeep"
 )
 
 func notify(title, message string) error {
-	notification := toast.Notification{
-		AppID:   "BetterVencordPatch",
-		Title:   title,
-		Message: message,
-	}
-	return notification.Push()
+	// notification := toast.Notification{
+	// 	AppID:   "BetterVencordPatch",
+	// 	Title:   title,
+	// 	Message: message,
+	// }
+	// return notification.Push()
+	err := beeep.Notify(title, message, "")
+	return err
 }
