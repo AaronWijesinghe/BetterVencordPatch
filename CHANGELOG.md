@@ -1,4 +1,4 @@
-### Version 0.5.0
+### Version 1.0.0
 **You must redownload INSTALLER/INSTALLER.exe.**<br>
 A lot of important updates have been made to the GitHub Releases installer (INSTALLER).
 - [#9, Lani0516](https://github.com/AaronWijesinghe/BetterVencordPatch/pull/9) - Verify SHA-256 of downloaded assets before installing them
