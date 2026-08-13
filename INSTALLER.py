@@ -130,8 +130,7 @@ def install():
     if op == "Windows" and autopatch == True:
         input("Make sure to restart your computer so the auto-patcher can run.")
     else:
-        input("Press ENTER to exit.")
-    exit()
+        input("Press ENTER to return to the main menu.")
 
 def uninstall():
     clear()
