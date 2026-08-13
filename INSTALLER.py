@@ -168,7 +168,7 @@ def uninstall():
     else:
         input("The uninstaller is not supported on your operating system.")
 
-    input("Successfully uninstalled BetterVencordPatch!")
+    input("\nSuccessfully uninstalled BetterVencordPatch!")
 
 def main():
     while True:
