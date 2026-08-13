@@ -3,6 +3,7 @@ import shutil
 import zipfile
 import platform
 import requests
+import traceback
 import subprocess
 from datetime import datetime
 from sys import exit
@@ -195,3 +196,9 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         exit()
+    except Exception as e:
+        clear()
+        print(f"{gold}[BetterVencordPatch Installer]{end}")
+        print("The installer has encountered a fatal error.")
+        print("Please file an issue on GitHub if this error keeps appearing.\n")
+        traceback.print_exc()
