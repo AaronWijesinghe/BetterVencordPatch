@@ -50,8 +50,12 @@ bvp_version = releases[0]["name"]
 published_timestamp = datetime.fromisoformat(releases[0]["published_at"])
 print("This installer will download the latest files from GitHub Releases.")
 print(f"Latest available version: {bvp_version} (released {published_timestamp})")
-autopatch = input("\nAutomatically patch Discord with Vencord through updates (y/N)? ").lower().strip() == "y"
-openasar = input("Patch OpenAsar (y/N)? ").lower().strip() == "y"
+
+try:
+    autopatch = input("\nAutomatically patch Discord with Vencord through updates (y/N)? ").lower().strip() == "y"
+    openasar = input("Patch OpenAsar (y/N)? ").lower().strip() == "y"
+except KeyboardInterrupt:
+    exit()
 
 paths = {
     "Windows": [
