@@ -46,7 +46,7 @@ os.system("go mod tidy")
 os.system("set CGO_ENABLED=0")
 os.system("set GOOS=windows")
 os.system("set GOARCH=amd64")
-os.system(f"go build -ldflags=\"-H=windowsgui -X main.branch={branch} -X main.patchOpenAsar={str(openasar).lower()} -X main.sendSuccessNotifications='{str(send_success_notifications).lower()}'\" --tags cli")
+os.system(f"go build -ldflags=\"-H=windowsgui -X main.branch={branch} -X main.patchOpenAsar={str(openasar).lower()} -X main.sendSuccessNotifications={str(send_success_notifications).lower()}\" --tags cli")
 if os.path.exists(f"C:/Users/{getpass.getuser()}/AppData/Local/bettervencordpatch/vencordinstaller.exe"):
     os.remove(f"C:/Users/{getpass.getuser()}/AppData/Local/bettervencordpatch/vencordinstaller.exe")
 os.rename("vencordinstaller.exe", f"C:/Users/{getpass.getuser()}/AppData/Local/bettervencordpatch/vencordinstaller.exe")
