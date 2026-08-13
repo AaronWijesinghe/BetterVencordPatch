@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"syscall"
 	"time"
 
@@ -64,8 +65,8 @@ func startDiscord() {
 func main() {
 	var lastUpdate time.Time
 
-	discordICON := filepath.Clean(filepath.Join(os.Getenv("LOCALAPPDATA"), "Discord"+suffixes[branch]+"/app.ico"))
-	fmt.Println(discordICON)
+	discordPath := filepath.Clean(filepath.Join(os.Getenv("LOCALAPPDATA"), "Discord"+suffixes[branch]))
+	fmt.Println(discordPath)
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		fmt.Println("["+time.Now().Format("2006-01-02 15:04:05")+"] Failed to create watcher:", err)
@@ -73,8 +74,7 @@ func main() {
 	}
 	defer watcher.Close()
 
-	dir := filepath.Dir(discordICON)
-	err = watcher.Add(dir)
+	err = watcher.Add(discordPath)
 	if err != nil {
 		fmt.Println("["+time.Now().Format("2006-01-02 15:04:05")+"] Failed to add watcher:", err)
 		return
@@ -85,13 +85,13 @@ func main() {
 	for {
 		select {
 		case event := <-watcher.Events:
-			if filepath.Clean(event.Name) == discordICON {
-				if event.Op&fsnotify.Create == fsnotify.Create || event.Op&fsnotify.Write == fsnotify.Write || event.Op&fsnotify.Remove == fsnotify.Remove {
+			if strings.Contains(filepath.Clean(event.Name), "app-") {
+				if event.Op&fsnotify.Create == fsnotify.Create {
 					if time.Since(lastUpdate) > 30*time.Second {
 						lastUpdate = time.Now()
-						fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Icon update detected, patching Vencord in 10s...")
-						time.Sleep(time.Second * 10)
-						fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Discord has (likely) finished updating, re-opening Discord...")
+						fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] App update detected, patching Vencord in 5s...")
+						time.Sleep(time.Second * 5)
+						fmt.Println("[" + time.Now().Format("2006-01-02 15:04:05") + "] Discord has finished updating, re-opening Discord...")
 						killDiscord()
 						time.Sleep(time.Second * 2)
 						runInstaller()
