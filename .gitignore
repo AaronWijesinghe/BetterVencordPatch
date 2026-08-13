@@ -4,4 +4,5 @@ vencordinstaller
 *.exe
 *.syso
 *.old
+*.spec
 *.DS_Store

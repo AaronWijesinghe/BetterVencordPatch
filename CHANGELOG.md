@@ -12,7 +12,7 @@ A lot of important updates have been made to the GitHub Releases installer.
 - Use .json() instead of json.loads() within INSTALLER (6f9e943)
 - If the autopatcher isn't selected when running INSTALLER on macOS, the launchd plist won't be installed (9360da5)
 - If unzipping VencordInstaller.app.zip fails, INSTALLER will properly clean up (31c9ad7)
-- Use subprocess.run instead of os.system in INSTSLLER to improve security (5c15f18)
+- Use subprocess.run instead of os.system in INSTALLER to improve security (5c15f18)
 - Make the Windows autopatcher more reliable by scanning for app-* folder creation (c7917a0)
 - Add BetterVencordPatch uninstallation to INSTALLER (f506c17)
 
