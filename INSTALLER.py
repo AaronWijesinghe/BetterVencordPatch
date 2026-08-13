@@ -12,11 +12,11 @@ end = "\033[0m"
 
 paths = {
     "installer": {
-        "Windows": os.path.expanduser("~/AppData/Local/BetterVencordPatch/vencordinstaller.exe"),
+        "Windows": os.path.expanduser("~\\AppData\\Local\\BetterVencordPatch\\vencordinstaller.exe"),
         "Darwin": "/Applications/VencordInstaller.app"
     },
     "autopatcher": {
-        "Windows": os.path.expanduser("~/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autovencordpatch.exe"),
+        "Windows": os.path.expanduser("~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\autovencordpatch.exe"),
         "Darwin": "/Applications/VencordInstaller.app/Contents/Resources/autovencordpatch"
     },
     "autopatcher_plist": os.path.expanduser("~/Library/LaunchAgents/org.aaron.autovencordpatch.plist")
