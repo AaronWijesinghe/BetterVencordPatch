@@ -154,7 +154,7 @@ def uninstall():
     elif op == "Windows":
         subprocess.run(["taskkill", "/f", "/im", "autovencordpatch.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(["taskkill", "/f", "/im", "vencordinstaller.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        print("Stopped running processes")
+        print("\nStopped running processes")
 
         if os.path.exists(paths["installer"][op]):
             shutil.rmtree(f"{paths["installer"][op]}/..")
