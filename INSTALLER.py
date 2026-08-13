@@ -20,7 +20,8 @@ paths = {
         "Windows": os.path.expanduser("~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\autovencordpatch.exe"),
         "Darwin": "/Applications/VencordInstaller.app/Contents/Resources/autovencordpatch"
     },
-    "autopatcher_plist": os.path.expanduser("~/Library/LaunchAgents/org.aaron.autovencordpatch.plist")
+    "autopatcher_plist": os.path.expanduser("~/Library/LaunchAgents/org.aaron.autovencordpatch.plist"),
+    "bvp_dir_windows": os.path.expanduser("~\\AppData\\Local\\BetterVencordPatch\\")
 }
 
 os.chdir(os.path.dirname(__file__))
@@ -156,8 +157,8 @@ def uninstall():
         subprocess.run(["taskkill", "/f", "/im", "vencordinstaller.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         print("\nStopped running processes")
 
-        if os.path.exists(paths["installer"][op]):
-            shutil.rmtree(f"{paths["installer"][op]}/..")
+        if os.path.exists(paths["bvp_dir_windows"]):
+            shutil.rmtree(paths["bvp_dir_windows"])
             print("Removed the Vencord Installer")
         else:
             print("Skipped uninstalling the Vencord Installer as it doesn't exist")
