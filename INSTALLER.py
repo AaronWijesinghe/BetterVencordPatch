@@ -1,7 +1,6 @@
 import os
 import shutil
 import zipfile
-import getpass
 import platform
 import requests
 import subprocess
@@ -134,25 +133,26 @@ def install():
 
 def uninstall():
     clear()
-    print(f"{gold}[BetterVencordPatch Installer]{end}")
+    print(f"{gold}[BetterVencordPatch Uninstaller]{end}")
 
     op = platform.system()
     if op == "Darwin":
         uid = os.getuid()
         if os.path.exists(paths["installer"][op]):
-            subprocess.run(["rm", "-rf", paths["installer"][op]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            shutil.rmtree(paths["installer"][op])
             print("Removed the Vencord Installer")
         else:
             print("Skipped uninstalling the Vencord Installer as it doesn't exist")
 
         if os.path.exists(paths["autopatcher_plist"]):
             subprocess.run(["launchctl", "bootout", f"gui/{uid}", paths["autopatcher_plist"]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            os.remove(paths["autopatcher_plist"])
             print("Removed the autopatcher launchd plist")
         else:
             print("Skipped uninstalling the autopatcher launchd plist as it doesn't exist")
     elif op == "Windows":
         if os.path.exists(paths["installer"][op]):
-            os.remove(paths["installer"][op])
+            shutil.rmtree(f"{paths["installer"][op]}/..")
             print("Removed the Vencord Installer")
         else:
             print("Skipped uninstalling the Vencord Installer as it doesn't exist")
