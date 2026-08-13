@@ -9,7 +9,6 @@ from datetime import datetime
 from sys import exit
 
 gold = "\033[0;33m"
-bold = "\033[1m"
 end = "\033[0m"
 
 os.chdir(os.path.dirname(__file__))
@@ -26,9 +25,9 @@ def download_file(session, url):
         input(f"Couldn't fetch file from URL: {url}")
         exit()
 
-def main():
+def install():
     clear()
-    print(f"{bold}{gold}[BetterVencordPatch Installer]{end}")
+    print(f"{gold}[BetterVencordPatch Installer]{end}")
 
     try:
         releases_req = requests.get("https://api.github.com/repos/AaronWijesinghe/BetterVencordPatch/releases")
@@ -67,11 +66,13 @@ def main():
 
     if platform.system() == "Windows":
         subprocess.run(["taskkill", "/f", "/im", "autovencordpatch.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        os.makedirs(f"C:/Users/{getpass.getuser()}/AppData/Local/BetterVencordPatch/", exist_ok=True)
+        subprocess.run(["taskkill", "/f", "/im", "vencordinstaller.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        bvp_path = os.path.expanduser("~/AppData/Local/BetterVencordPatch/")
+        os.makedirs(bvp_path, exist_ok=True)
 
     clear()
     session = requests.Session()
-    print(f"{bold}{gold}[Downloading and moving required files...]{end}")
+    print(f"{gold}[Downloading and moving required files...]{end}")
     for asset in releases[0]["assets"]:
         if platform.system() == "Darwin":
             if f"VencordInstaller-{"no_" if not openasar else ""}openasar.app.zip" == asset["name"]:
@@ -93,12 +94,14 @@ def main():
                 print(f"Successfully downloaded BetterVencordPatch")
         elif platform.system() == "Windows":
             if f"VencordInstaller-{"no_" if not openasar else ""}openasar.exe" == asset["name"]:
+                vi_app_path = os.path.expanduser("~/AppData/Local/BetterVencordPatch/vencordinstaller.exe")
                 vi_app_win = download_file(session, asset["browser_download_url"])
-                open(f"C:/Users/{getpass.getuser()}/AppData/Local/BetterVencordPatch/vencordinstaller.exe", "wb").write(vi_app_win)
+                open(vi_app_path, "wb").write(vi_app_win)
                 print(f"Successfully downloaded BetterVencordPatch")
             elif f"autovencordpatch.exe" == asset["name"] and autopatch:
+                autopatch_path = os.path.expanduser("~/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autovencordpatch.exe")
                 autopatch_win = download_file(session, asset["browser_download_url"])
-                open(f"C:/Users/{getpass.getuser()}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/autovencordpatch.exe", "wb").write(autopatch_win)
+                open(autopatch_path, "wb").write(autopatch_win)
                 print(f"Successfully installed autopatch component")
 
     if platform.system() == "Darwin" and autopatch:
@@ -107,7 +110,7 @@ def main():
                 uid = os.getuid()
                 plist_path = os.path.expanduser("~/Library/LaunchAgents/org.aaron.autovencordpatch.plist")
                 autopatch_plist = download_file(session, asset["browser_download_url"])
-                open(f"/Users/{getpass.getuser()}/Library/LaunchAgents/org.aaron.autovencordpatch.plist", "wb").write(autopatch_plist)
+                open(plist_path, "wb").write(autopatch_plist)
                 subprocess.run(["chmod", "644", plist_path])
                 subprocess.run(["launchctl", "bootout", f"gui/{uid}", plist_path])
                 subprocess.run(["launchctl", "bootstrap", f"gui/{uid}", plist_path])
@@ -129,6 +132,42 @@ def main():
     else:
         input("Press ENTER to exit.")
     exit()
+
+def uninstall():
+    if platform.system() == "Darwin":
+        uid = os.getuid()
+        plist_path = os.path.expanduser("~/Library/LaunchAgents/org.aaron.autovencordpatch.plist")
+
+        if os.path.exists("/Applications/VencordInstaller.app"):
+            subprocess.run(["rm", "-rf", "/Applications/VencordInstaller.app"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            print("Removed the Vencord Installer")
+        else:
+            print("Skipped uninstalling the Vencord Installer as it doesn't exist")
+        if os.path.exists(plist_path):
+            subprocess.run(["launchctl", "bootout", f"gui/{uid}", plist_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            print("Removed the autopatcher launchd plist")
+        else:
+            print("Skipped uninstalling the autopatcher launchd plist as it doesn't exist")
+    elif platform.system() == "Windows":
+        input("Uninstallation for Windows will be implemented in a future commit.")
+
+def main():
+    while True:
+        clear()
+        print(f"{gold}[BetterVencordPatch Installer]{end}")
+        print("Choose an option below:")
+        print("[1] Install BetterVencordPatch")
+        print("[2] Uninstall BetterVencordPatch")
+        print("[3] Exit")
+
+        choice = input("\n> ")
+        match choice:
+            case "1":
+                install()
+            case "2":
+                uninstall()
+            case "3":
+                exit()
 
 if __name__ == "__main__":
     try:

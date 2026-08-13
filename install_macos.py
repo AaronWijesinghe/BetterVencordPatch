@@ -2,7 +2,6 @@ import os
 import platform
 
 gold = "\033[0;33m"
-bold = "\033[1m"
 end = "\033[0m"
 
 os.chdir(os.path.dirname(__file__))
@@ -14,7 +13,7 @@ def run_sh(sh):
         os.system(f"{cmd}")
 
 clear()
-print(f"{bold}{gold}[BetterVencordPatch Installer (macOS)]{end}")
+print(f"{gold}[BetterVencordPatch Installer (macOS)]{end}")
 branch = input("Enter the branch of Discord to be patched by Vencord (stable, ptb, canary): ")
 if branch not in ["stable", "ptb", "canary"]:
     input("This branch of Discord doesn't exist.")
@@ -24,7 +23,7 @@ use_autopatch = input("Patch this branch of Discord through updates (y/N)? ").lo
 send_success_notifications = input("Send notifications on success (y/N)? ").lower().strip() == "y"
 
 clear()
-print(f"{bold}{gold}[Installing BetterVencordPatch]{end}")
+print(f"{gold}[Installing BetterVencordPatch]{end}")
 print(f"Installing with preferences: branch='{branch}', openasar={openasar}, use_autopatch={use_autopatch}, send_success_notifications={send_success_notifications}")
 print("\nRunning pre-install checks...", end=" ", flush=True)
 if platform.system() != "Darwin":
