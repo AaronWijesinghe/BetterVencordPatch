@@ -38,7 +38,7 @@ def download_file(session, url):
         input(f"Couldn't fetch file from URL: {url}")
         exit()
 
-def install():
+def install_gh():
     clear()
     print(f"{gold}[BetterVencordPatch Installer]{end}")
 
@@ -115,7 +115,7 @@ def install():
                 subprocess.run(["chmod", "644", paths["autopatcher_plist"]])
                 subprocess.run(["launchctl", "bootout", f"gui/{uid}", paths["autopatcher_plist"]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 subprocess.run(["launchctl", "bootstrap", f"gui/{uid}", paths["autopatcher_plist"]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                print(f"Installed autopatch launchd plist (macOS)")
+                print(f"Installed autopatch launchd plist")
             elif asset["name"] == "autovencordpatch":
                 autopatch_darwin = download_file(session, asset["browser_download_url"])
                 open(f"/Applications/VencordInstaller.app/Contents/Resources/autovencordpatch", "wb").write(autopatch_darwin)
@@ -131,6 +131,121 @@ def install():
     if op == "Windows" and autopatch == True:
         os.startfile(paths["autopatcher"][op])
     input("Press ENTER to return to the main menu.")
+
+def install():
+    op = platform.system()
+    if op == "Windows":
+        clear()
+        print(f"{gold}[BetterVencordPatch Installer]{end}")
+        branch = input("Enter the branch of Discord to be patched by Vencord (stable, ptb, canary): ")
+        if branch not in ["stable", "ptb", "canary"]:
+            input("This branch of Discord doesn't exist.")
+            exit()
+        openasar = input("Patch this branch of Discord with OpenAsar (y/N)? ").lower().strip() == "y"
+        use_autopatch = input("Patch this branch of Discord through updates (y/N)? ").lower().strip() == "y"
+        send_success_notifications = input("Send notifications on success (y/N)? ").lower().strip() == "y"
+
+        clear()
+        print(f"{gold}[Installing BetterVencordPatch]{end}")
+        print(f"Installing with preferences: branch='{branch}', openasar={openasar}, use_autopatch={use_autopatch}, send_success_notifications={send_success_notifications}")
+        print("\nRunning pre-install checks...", end=" ", flush=True)
+        os.makedirs(paths["bvp_dir_windows"], exist_ok=True)
+        for dir in ["./autopatch/" if use_autopatch else "./installer/"]:
+            if not os.path.exists(dir):
+                print("failed")
+                input(f"The directory '{dir}' is missing.")
+                exit()
+        print("done")
+
+        branch_suffixes = {
+            "stable": "",
+            "ptb": "PTB",
+            "canary": "Canary"
+        }
+        os.chdir("./installer/")
+        print("Building VencordInstaller.exe...", end=" ", flush=True)
+        subprocess.run(["go", "mod", "tidy"])
+        subprocess.run(["go", "build", f"-ldflags=-H=windowsgui -X main.branch={branch} -X main.patchOpenAsar={str(openasar).lower()} -X main.sendSuccessNotifications={str(send_success_notifications).lower()}", "--tags", "cli"])
+        if os.path.exists(paths["installer"][op]):
+            os.remove(paths["installer"][op])
+        os.rename("vencordinstaller.exe", paths["autopatcher"][op])
+        print("done")
+
+        if use_autopatch:
+            print("Building auto-patch binary...", end=" ", flush=True)
+            subprocess.run(["go", "mod", "tidy"])
+            subprocess.run(["go", "build", f"-ldflags=-H=windowsgui -X main.branch={branch_suffixes[branch]}", "--tags", "avp_win", "-o", "autovencordpatch.exe"])
+            # uncomment this line and comment the line above to see autopatcher output
+            # subprocess.run(["go", "build", f"-X main.branch={branch_suffixes[branch]}", "--tags", "avp_win", "-o", "autovencordpatch.exe"])
+            subprocess.run(["taskkill", "/f", "/im", "autovencordpatch.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["taskkill", "/f", "/im", "vencordinstaller.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if os.path.exists(paths["autopatcher"][op]):
+                os.remove(paths["autopatcher"][op])
+            os.rename("autovencordpatch.exe", paths["autopatcher"][op])
+            print("done")
+
+        if op == "Windows" and use_autopatch == True:
+            os.startfile(paths["autopatcher"][op])
+        input("\nSuccessfully installed BetterVencordPatch!")
+    elif op == "Darwin":
+        clear()
+        print(f"{gold}[BetterVencordPatch Installer]{end}")
+        print("This installer will install BetterVencordPatch from source.")
+        branch = input("\nEnter the branch of Discord to be patched by Vencord (stable, ptb, canary): ")
+        if branch not in ["stable", "ptb", "canary"]:
+            input("This branch of Discord doesn't exist.")
+            exit()
+        openasar = input("Patch this branch of Discord with OpenAsar (y/N)? ").lower().strip() == "y"
+        use_autopatch = input("Patch this branch of Discord through updates (y/N)? ").lower().strip() == "y"
+        send_success_notifications = input("Send notifications on success (y/N)? ").lower().strip() == "y"
+
+        clear()
+        print(f"{gold}[Installing BetterVencordPatch]{end}")
+        print(f"Installing with preferences: branch='{branch}', openasar={openasar}, use_autopatch={use_autopatch}, send_success_notifications={send_success_notifications}")
+        print("\nRunning pre-install checks...", end=" ", flush=True)
+        for dir in ["./autopatch/" if use_autopatch else "./installer/", "./installer/"]:
+            if not os.path.exists(dir):
+                print("failed")
+                input(f"The directory '{dir}' is missing.")
+                exit()
+        print("done")
+
+        os.chdir("./installer/")
+        print("Building VencordInstaller.app...", end=" ", flush=True)
+        subprocess.run(["go", "mod", "tidy"])
+        subprocess.run(["go", "build", f"-ldflags=-X main.branch={branch} -X main.patchOpenAsar={str(openasar).lower()} -X main.sendSuccessNotifications={str(send_success_notifications).lower()}", "--tags", "cli"])
+        subprocess.run(["mkdir", "-p", "VencordInstaller.app/Contents/MacOS"])
+        subprocess.run(["mkdir", "-p", "VencordInstaller.app/Contents/Resources"])
+        subprocess.run(["cp", "macos/Info.plist", "VencordInstaller.app/Contents/Info.plist"])
+        subprocess.run(["mv", "VencordInstaller", "VencordInstaller.app/Contents/MacOS/VencordInstaller"])
+        subprocess.run(["cp", "macos/icon.icns", "VencordInstaller.app/Contents/Resources/icon.icns"])
+        subprocess.run(["rm", "-rf", os.path.pardir + "/VencordInstaller.app"])
+        subprocess.run(["mv", "VencordInstaller.app", os.path.pardir + "/VencordInstaller.app"])
+        print("done")
+
+        if use_autopatch:
+            print("Building auto-patch binary...", end=" ", flush=True)
+            subprocess.run(["go", "mod", "tidy"])
+            subprocess.run(["go", "build", f"-ldflags=-X main.branch={branch}", "--tags", "avp_macos", "-o", "autovencordpatch"])
+            subprocess.run(["chmod", "+x", "autovencordpatch"])
+            subprocess.run(["mv", "autovencordpatch", os.path.pardir + "/VencordInstaller.app/Contents/Resources/autovencordpatch"])
+            print("done")
+
+        os.chdir("../")
+        subprocess.run(["rm", "-rf", "/Applications/VencordInstaller.app"])
+        subprocess.run(["mv", "VencordInstaller.app", "/Applications/VencordInstaller.app"])
+
+        if use_autopatch:
+            uid = os.getuid()
+            print("Running auto-patch install scripts...", end=" ", flush=True)
+            subprocess.run(["cp", "autopatch/org.aaron.autovencordpatch.plist", paths["autopatcher_plist"]])
+            subprocess.run(["chmod", "644", paths["autopatcher_plist"]])
+            subprocess.run(["launchctl", "bootout", f"gui/{uid}", paths["autopatcher_plist"]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["launchctl", "bootstrap", f"gui/{uid}", paths["autopatcher_plist"]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["open", "/Applications/VencordInstaller.app"])
+            print("done")
+
+        input("\nSuccessfully installed BetterVencordPatch!")
 
 def uninstall():
     clear()
@@ -174,21 +289,32 @@ def uninstall():
     input("\nSuccessfully uninstalled BetterVencordPatch!")
 
 def main():
+    if platform.system() not in ["Windows", "Darwin"]:
+        clear()
+        print(f"{gold}[BetterVencordPatch Installer]{end}")
+        input("This operating system isn't currently supported by the installer.")
+        exit()
+
     while True:
         clear()
         print(f"{gold}[BetterVencordPatch Installer]{end}")
-        print("Choose an option below:")
-        print("[1] Install BetterVencordPatch")
-        print("[2] Uninstall BetterVencordPatch")
-        print("[3] Exit")
+        print("Detected OS:", platform.system())
+
+        print("\nChoose an option below:")
+        print("[1] Install BetterVencordPatch from GitHub Releases")
+        print("[2] Install BetterVencordPatch from source")
+        print("[3] Uninstall BetterVencordPatch")
+        print("[4] Exit")
 
         choice = input("\n> ")
         match choice:
             case "1":
-                install()
+                install_gh()
             case "2":
-                uninstall()
+                install()
             case "3":
+                uninstall()
+            case "4":
                 exit()
 
 if __name__ == "__main__":
