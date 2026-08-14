@@ -4,7 +4,7 @@ Vencord doesn't automatically patch itself when Discord updates, so BetterVencor
 
 ## Features
 - BetterVencordPatch can patch Vencord without any user interaction, unlike the official installer
-    - This is due to modifications made to the installer source. All references to UI in cli.go have been removed for optimization purposes.
+    - This is due to modifications made to the installer source.
     - **You can disable the auto-patch functionality in the installer while still being able to install Vencord without a UI.**
 - Patch Vencord (and optionally OpenAsar) automatically, even through Discord updates
 - Notifications are used to communicate success, failure, and errors
@@ -16,8 +16,8 @@ All the required files will be downloaded for you.
 
 ## Installing from Source
 **You have much more control over your installation when installing from source, including the Discord branch which is patched and whether or not to send notifications on success.**</br>
-All original requirements for building the official installer apply here.</br>
-Run install_[YOUR OPERATING SYSTEM].py to install BetterVencordPatch from source.</br>
+All original requirements for building the official Vencord Installer apply here.</br>
+Run INSTALLER.py to install BetterVencordPatch from source.</br>
 To install from source, install Python 3.x and Go 1.25.x. The dependencies will automatically be installed.
 
 # Building from Source
