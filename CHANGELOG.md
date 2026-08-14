@@ -1,3 +1,7 @@
+### Version 1.1.0
+- Make Windows autopatching more reliable by checking for file size changes in app-* folders (a4d4fb5)
+- Unify the source installer and GitHub Releases installer (b8da95a)
+
 ### Version 1.0.0
 **You must redownload INSTALLER/INSTALLER.exe.**<br>
 A lot of important updates have been made to the GitHub Releases installer (INSTALLER).
