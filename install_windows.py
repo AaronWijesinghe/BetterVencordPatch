@@ -33,10 +33,6 @@ def install():
     print(f"Installing with preferences: branch='{branch}', openasar={openasar}, use_autopatch={use_autopatch}, send_success_notifications={send_success_notifications}")
     print("\nRunning pre-install checks...", end=" ", flush=True)
     os.makedirs(paths["bvp_dir"], exist_ok=True)
-    if platform.system() != "Windows":
-        print("failed")
-        input("This operating system is not supported by this installer.")
-        exit()
     for dir in ["./autopatch/" if use_autopatch else "./installer/"]:
         if not os.path.exists(dir):
             print("failed")
@@ -71,6 +67,8 @@ def install():
         os.rename("autovencordpatch.exe", paths["autopatcher"])
         print("done")
 
+    if op == "Windows" and use_autopatch == True:
+        os.startfile(paths["autopatcher"][op])
     input("\nSuccessfully installed BetterVencordPatch!")
 
 def uninstall():
@@ -97,6 +95,12 @@ def uninstall():
     input("\nSuccessfully uninstalled BetterVencordPatch!")
 
 def main():
+    if platform.system() != "Windows":
+        clear()
+        print(f"{gold}[BetterVencordPatch Installer (Windows)]{end}")
+        input("This operating system isn't supported by the installer.")
+        exit()
+
     while True:
         clear()
         print(f"{gold}[BetterVencordPatch Installer (Windows)]{end}")

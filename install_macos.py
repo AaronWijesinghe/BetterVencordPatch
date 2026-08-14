@@ -33,10 +33,6 @@ def install():
     print(f"{gold}[Installing BetterVencordPatch]{end}")
     print(f"Installing with preferences: branch='{branch}', openasar={openasar}, use_autopatch={use_autopatch}, send_success_notifications={send_success_notifications}")
     print("\nRunning pre-install checks...", end=" ", flush=True)
-    if platform.system() != "Darwin":
-        print("failed")
-        input("This operating system is not supported by this installer.")
-        exit()
     for dir in ["./autopatch/" if use_autopatch else "./installer/", "./installer/"]:
         if not os.path.exists(dir):
             print("failed")
@@ -79,6 +75,8 @@ def install():
         subprocess.run(["open", "/Applications/VencordInstaller.app"])
         print("done")
 
+    input("\nSuccessfully installed BetterVencordPatch!")
+
 def uninstall():
     clear()
     print(f"{gold}[BetterVencordPatch Installer (macOS)]{end}")
@@ -101,6 +99,12 @@ def uninstall():
     input("\nSuccessfully uninstalled BetterVencordPatch!")
 
 def main():
+    if platform.system() != "Darwin":
+        clear()
+        print(f"{gold}[BetterVencordPatch Installer (macOS)]{end}")
+        input("This operating system isn't supported by the installer.")
+        exit()
+
     while True:
         clear()
         print(f"{gold}[BetterVencordPatch Installer (macOS)]{end}")
