@@ -162,7 +162,7 @@ def install(op):
             "ptb": "PTB",
             "canary": "Canary"
         }
-        os.makedirs(paths["bvp_dir_windows"], exist_ok=True)
+        os.makedirs(paths["installer"][op], exist_ok=True)
         os.chdir("./installer/")
         print("Building VencordInstaller.exe...", end=" ", flush=True)
         subprocess.run(["go", "mod", "tidy"])
