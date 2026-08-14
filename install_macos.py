@@ -4,6 +4,12 @@ import platform
 gold = "\033[0;33m"
 end = "\033[0m"
 
+paths = {
+    "installer": "/Applications/VencordInstaller.app",
+    "autopatcher": "/Applications/VencordInstaller.app/Contents/Resources/autovencordpatch",
+    "autopatcher_plist": os.path.expanduser("~/Library/LaunchAgents/org.aaron.autovencordpatch.plist")
+}
+
 os.chdir(os.path.dirname(__file__))
 def clear():
     print("\033[2J\033[3J\033[H", end='')
